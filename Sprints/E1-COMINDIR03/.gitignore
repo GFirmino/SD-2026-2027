@@ -1,0 +1,6 @@
+build/
+bin/
+*.class
+lider-p*.txt
+replica-*-p*.txt
+vista-lamport.txt
