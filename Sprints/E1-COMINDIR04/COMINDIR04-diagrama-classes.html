@@ -1,0 +1,188 @@
+<!doctype html>
+<html lang="pt-PT"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>COMINDIR04 · Diagrama de classes</title>
+<style>
+:root{--paper:#f4f6f8;--ink:#173042;--muted:#5b6e7a;--line:#ccd7dd;--blue:#24658b;--green:#18745d;--amber:#a35e0a;--app:#e5f2f8;--domain:#eaf5ee;--monitor:#fff1dc;--analysis:#eeeafb}*{box-sizing:border-box}body{margin:0;background:var(--paper);color:var(--ink);font:15px/1.5 "Segoe UI",Arial,sans-serif}header{background:#fff;border-bottom:1px solid var(--line);padding:26px 32px 20px}header small{color:var(--green);font-weight:700;letter-spacing:.12em;text-transform:uppercase}h1{font-size:30px;line-height:1.2;margin:7px 0}header p{max-width:1050px;margin:0;color:var(--muted)}nav{display:flex;gap:8px;flex-wrap:wrap;padding:18px 32px 0}button{font:inherit;border:1px solid #b8c7cf;background:#fff;color:var(--ink);padding:8px 13px;border-radius:7px;cursor:pointer}button:hover{border-color:var(--blue)}button[aria-selected=true]{background:var(--blue);border-color:var(--blue);color:#fff}.page{padding:18px 32px 30px}.view{display:none}.view.active{display:block}.panel{background:#fff;border:1px solid var(--line);border-radius:12px;overflow:auto;padding:20px;box-shadow:0 2px 9px #1730420a}.intro{margin:0 0 16px;color:var(--muted)}
+.overview{min-width:1050px;display:grid;grid-template-columns:230px 90px 260px 90px 270px;grid-template-rows:auto auto auto;gap:24px 12px;align-items:center}.lane{align-self:stretch;border:1px dashed #b9c8cf;border-radius:12px;padding:13px}.lane h3{font-size:12px;text-transform:uppercase;letter-spacing:.08em;margin:0 0 12px}.apps{grid-column:1;grid-row:1/4;background:#f2f9fc}.leader{grid-column:3;grid-row:1/4;background:#f2f9fc}.consumers{grid-column:5;grid-row:1/4;background:#f2f9fc}.arrow{font-size:12px;text-align:center;color:var(--muted)}.arrow b{display:block;font-size:28px;color:var(--blue);line-height:1}.in{grid-column:2;grid-row:1}.batchflow{grid-column:4;grid-row:1}.tcp{grid-column:4;grid-row:2}.files{grid-column:4;grid-row:3}.card{border:1px solid #aebfc8;border-radius:8px;background:#fff;margin:10px 0;overflow:hidden}.card h4{font-size:15px;margin:0;padding:10px 12px;background:var(--app);border-bottom:1px solid #c8d9e0}.card.domain h4{background:var(--domain)}.card.monitor h4{background:var(--monitor)}.card p,.card ul{font-size:12px;margin:9px 12px}.card ul{padding-left:17px}.card code{font-size:11px}
+.section-title{display:flex;align-items:baseline;gap:12px;border-bottom:1px solid var(--line);margin:0 0 18px;padding-bottom:10px}.section-title h2{margin:0;font-size:20px}.section-title span{color:var(--muted);font-size:13px}.packages{display:grid;grid-template-columns:repeat(2,minmax(420px,1fr));gap:18px}.package{border:1px solid var(--line);border-radius:10px;padding:15px;background:#fafcfd}.package>h3{margin:0 0 12px;font-size:13px;color:var(--blue);text-transform:uppercase;letter-spacing:.08em}.uml{border:1px solid #9eafb9;background:#fff;margin-bottom:12px}.uml:last-child{margin-bottom:0}.uml .head{padding:9px 11px;background:var(--app);border-bottom:1px solid #b8c8d0;text-align:center}.uml.domain .head{background:var(--domain)}.uml.monitor .head{background:var(--monitor)}.uml.analysis .head{background:var(--analysis)}.uml .head b{display:block}.uml .head small{color:var(--muted)}.members{font:12px/1.55 Consolas,monospace;padding:8px 11px;border-bottom:1px solid #dbe2e6;white-space:pre-wrap}.members:last-child{border-bottom:0}.rel{margin-top:14px;border:1px solid var(--line);border-radius:9px;overflow:hidden}.rel table{width:100%;border-collapse:collapse}.rel th,.rel td{padding:9px 11px;border-bottom:1px solid #e2e7ea;text-align:left;font-size:12px}.rel th{background:#f0f4f6}.rel tr:last-child td{border-bottom:0}.legend{display:flex;gap:18px;flex-wrap:wrap;margin:14px 0 0;color:var(--muted);font-size:12px}.legend b{color:var(--ink)}
+.timeline{display:grid;grid-template-columns:150px repeat(4,minmax(180px,1fr));min-width:950px;border:1px solid var(--line);border-radius:10px;overflow:hidden}.timeline>*{padding:12px;border-right:1px solid var(--line);border-bottom:1px solid var(--line)}.timeline>*:nth-child(5n){border-right:0}.timeline .th{background:#eaf1f5;font-weight:700}.timeline .step{background:#f8fafb;font-weight:700}.timeline .last{border-bottom:0}.callout{margin-top:16px;padding:13px 16px;background:#fff7e8;border-left:4px solid var(--amber);font-size:13px}.filemap{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:12px}.filemap article{border:1px solid var(--line);border-radius:9px;background:#fff;padding:14px}.filemap h3{font-size:15px;margin:0 0 8px}.filemap p{font-size:12px;color:var(--muted);margin:0}.zoom-toolbar{display:flex;align-items:center;gap:7px;margin:0 0 9px}.zoom-toolbar button{padding:5px 11px;font-weight:700}.zoom-value{min-width:48px;text-align:center;color:var(--muted);font-size:12px}.zoom-help{margin-left:auto;color:var(--muted);font-size:12px}.diagram-stage{height:680px;overflow:hidden;border:1px solid var(--line);border-radius:9px;background:#f8fafb;cursor:grab;touch-action:none;position:relative}.diagram-stage.dragging{cursor:grabbing}.drawio{display:block;width:100%;height:100%;background:#fafafa}.drawio text{font-family:"Segoe UI",Arial,sans-serif;fill:#173042;pointer-events:none}.drawio .title{font-size:15px;font-weight:700}.drawio .stereo{font-size:10px;fill:#637682}.drawio .member{font:11px Consolas,monospace}.drawio .group-title{font-size:13px;font-weight:700;letter-spacing:.08em}.drawio .box{fill:#fff;stroke:#78909c;stroke-width:1.3}.drawio .head-app{fill:#dfeff7}.drawio .head-monitor{fill:#ffedcf}.drawio .head-domain{fill:#e4f2e8}.drawio .head-analysis{fill:#e9e5f7}.drawio .divider{stroke:#9fb0b9}.drawio .assoc{fill:none;stroke:#326d91;stroke-width:1.8;marker-end:url(#arrow)}.drawio .depend{fill:none;stroke:#6c7d87;stroke-width:1.5;stroke-dasharray:7 5;marker-end:url(#openArrow)}.drawio .compose{fill:none;stroke:#18745d;stroke-width:1.8;marker-start:url(#diamond);marker-end:url(#arrowGreen)}.drawio .rel-label{font-size:10px;font-weight:600;fill:#536874;paint-order:stroke;stroke:#fafafa;stroke-width:5px}.drawio .lane-label{font-size:11px;font-weight:700;fill:#607783}.diagram-legend{display:flex;gap:22px;flex-wrap:wrap;margin:15px 0 0;font-size:12px;color:var(--muted)}.sample{display:inline-block;width:52px;height:0;border-top:2px solid #326d91;margin-right:7px;vertical-align:middle}.sample.dashed{border-top-style:dashed;border-color:#6c7d87}.sample.green{border-color:#18745d}.foot{margin:0 32px 30px;padding:18px;background:#fff;border:1px solid var(--line);border-radius:10px}.foot h2{font-size:16px;margin:0 0 9px}.foot p{font-size:13px;color:var(--muted);margin:7px 0}code{font-family:Consolas,monospace;background:#edf2f5;padding:1px 4px;border-radius:3px}@media(max-width:900px){header,nav,.page{padding-left:16px;padding-right:16px}.packages{grid-template-columns:1fr}.foot{margin:0 16px 20px}.diagram-stage{height:560px}.zoom-help{display:none}}@media print{nav,.zoom-toolbar{display:none}.view{display:block!important;break-after:page}.page{padding:10px 0}.panel{box-shadow:none}.foot{margin:0}.overview{transform-origin:top left;transform:scale(.82);margin-bottom:-120px}.diagram-stage{height:auto;overflow:visible;border:0}.drawio{width:100%;height:auto}}
+</style></head><body>
+<header><small>Sistemas Distribuídos · COMINDIR04</small><h1>Diagrama de classes organizado por responsabilidade</h1><p>As cópias das classes comuns nos quatro projetos são representadas uma vez. Usa as vistas para separar o fluxo da aplicação, o modelo dos dados, a deteção de falhas e os verificadores.</p></header>
+<nav aria-label="Vistas do diagrama"><button data-view="geral" aria-selected="true">1 · Visão geral</button><button data-view="aplicacoes">2 · Aplicações</button><button data-view="heartbeat">3 · Heartbeat e lotes</button><button data-view="analise">4 · Verificadores</button><button data-view="ligacoes">5 · Ligações UML</button><button onclick="window.print()">Imprimir</button></nav>
+<main class="page">
+<section class="view active" id="geral"><div class="panel"><div class="section-title"><h2>Fluxo principal</h2><span>quem cria, publica, recebe e recupera</span></div><p class="intro">Lê da esquerda para a direita. As setas representam comunicação entre processos; dentro das caixas aparecem as classes usadas por cada papel.</p><div class="overview">
+<div class="lane apps"><h3>Entradas</h3><div class="card"><h4>Producer</h4><p>Publica leituras e acompanha os cabeçalhos.</p></div><div class="card"><h4>AlarmProcessor</h4><p>Observa registos e publica alarmes.</p></div><div class="card domain"><h4>Partitioner + Wire</h4><p>Escolhem <code>p&lt;k&gt;</code> e constroem <code>IN</code>.</p></div></div>
+<div class="arrow in"><span>PubSub</span><b>→</b><code>rep04-in-p&lt;k&gt;</code></div>
+<div class="lane leader"><h3>Líder da partição k</h3><div class="card"><h4>PartitionLeader</h4><ul><li>atribui seq, L e V;</li><li>guarda SensorRecord;</li><li>acumula pendentes;</li><li>publica Batch.</li></ul></div><div class="card domain"><h4>RecordFile</h4><p>Histórico e recuperação.</p></div><div class="card domain"><h4>Batch</h4><p>Heartbeat + zero ou mais registos.</p></div></div>
+<div class="arrow batchflow"><span>PubSub</span><b>→</b><code>rep04-p&lt;k&gt;</code></div><div class="arrow tcp"><span>recuperação</span><b>↔</b><code>TCP 7000+k</code></div><div class="arrow files"><span>ficheiros</span><b>→</b><code>hb-p&lt;k&gt;.txt</code></div>
+<div class="lane consumers"><h3>Participantes</h3><div class="card"><h4>PartitionReplica</h4><p>Aplica por seq e recupera quando <code>last &lt; ultimoSeq</code>.</p></div><div class="card"><h4>AlarmProcessor</h4><p>Trata registos e transporta L/V.</p></div><div class="card"><h4>Producer</h4><p>Lê só o cabeçalho para vigiar o destino.</p></div><div class="card monitor"><h4>HeartbeatMonitor</h4><p>DESCONHECIDO → ATIVO ↔ SUSPEITO.</p></div></div>
+</div><div class="legend"><span><b>IN:</b> leitura ainda sem seq local</span><span><b>LOTE:</b> heartbeat e dados</span><span><b>TCP:</b> histórico persistido</span></div></div></section>
+
+<section class="view" id="aplicacoes"><div class="panel"><div class="section-title"><h2>Aplicações e modelo comum</h2><span>associações guardadas e dependências usadas</span></div><div class="packages">
+<div class="package"><h3>Processos executáveis</h3>
+<div class="uml"><div class="head"><b>Producer</b><small>entrada original + monitorização</small></div><div class="members">- DEFAULT_API: String
++ main(args): void
+- warn(monitor, k, sensor): void</div></div>
+<div class="uml"><div class="head"><b>PartitionLeader</b><small>cria eventos da partição</small></div><div class="members">- k, porto, inc, hb, seq, lamport
+- partitioner: Partitioner
+- ps: IpfsPubSub
+- file: RecordFile
+- vector: VectorClock
+- pendentes: List&lt;SensorRecord&gt;</div><div class="members">+ start(): void
+- processInMessage(msg): void
+- enviarLote(): void
+- getLastSeq(): long</div></div>
+<div class="uml"><div class="head"><b>PartitionReplica</b><small>contém PartitionState por partição</small></div><div class="members">+ main(args): void
+
+PartitionState
+- file, pending, last
+- leaderHost, leaderPort
+- monitor, log
++ onPubSubMessage(msg): void
+- applyRule / drainPending / recover</div></div>
+<div class="uml"><div class="head"><b>AlarmProcessor</b><small>transporta conhecimento e cria alarmes</small></div><div class="members">- partitioner: Partitioner
+- pubSub: IpfsPubSub
+- monitors: HeartbeatMonitor[]
+- seen: List&lt;Set&lt;Long&gt;&gt;
+- lamport, vector</div><div class="members">+ start(): void
+- onMessage(k, msg): void
+- onRecord(k, record): void</div></div></div>
+<div class="package"><h3>Modelo e infraestrutura comuns</h3>
+<div class="uml domain"><div class="head"><b>SensorRecord</b><small>evento imutável</small></div><div class="members">- seq, sensorId, temperature
+- timestamp, lamport
+- vector: VectorClock</div><div class="members">+ now(...): SensorRecord
++ toLine(): String
++ fromLine(...): SensorRecord
++ getters</div></div>
+<div class="uml domain"><div class="head"><b>VectorClock</b><small>conhecimento causal</small></div><div class="members">- v: long[]
++ merge / tick / copy
++ compare(other): Order
++ parse(text, n): VectorClock</div></div>
+<div class="uml domain"><div class="head"><b>RecordFile</b><small>persistência em texto</small></div><div class="members">- path: Path
+- n: int
++ append / last / lastSeq
++ range(from, to)</div></div>
+<div class="uml domain"><div class="head"><b>Partitioner</b><small>função determinística</small></div><div class="members">- n: int
++ of(sensorId): int
++ count(): int</div></div>
+<div class="uml domain"><div class="head"><b>Wire</b><small>tópicos, constantes e IN</small></div><div class="members">+ PERIODO_HB_MS, FATOR_TIMEOUT
++ topicIn / topicData
++ validateReading / in / inParts</div></div>
+<div class="uml domain"><div class="head"><b>IpfsPubSub</b><small>adaptador HTTP do Kubo</small></div><div class="members">- api: String
+- http: HttpClient
++ publish(topic, msg)
++ subscribe(topic, callback)</div></div></div></div>
+<div class="rel"><table><thead><tr><th>Origem</th><th>Relação</th><th>Destino</th><th>Motivo</th></tr></thead><tbody><tr><td>PartitionLeader</td><td>associação</td><td>Partitioner, IpfsPubSub, RecordFile, VectorClock</td><td>mantém referências durante a vida do líder</td></tr><tr><td>PartitionLeader</td><td>criação</td><td>Batch / SensorRecord</td><td>cria snapshots e eventos</td></tr><tr><td>PartitionState</td><td>associação</td><td>RecordFile, HeartbeatMonitor, MonitorLog</td><td>estado próprio por partição</td></tr><tr><td>AlarmProcessor</td><td>associação</td><td>VectorClock, HeartbeatMonitor[]</td><td>conhecimento e saúde</td></tr><tr><td>Producer</td><td>dependência</td><td>Partitioner, IpfsPubSub, Batch</td><td>objetos locais de main</td></tr></tbody></table></div></div></section>
+
+<section class="view" id="heartbeat"><div class="panel"><div class="section-title"><h2>Heartbeat, lotes e deteção</h2><span>as classes novas da COMINDIR04</span></div><div class="packages">
+<div class="package"><h3>Produção do lote</h3><div class="uml monitor"><div class="head"><b>Batch</b><small>snapshot publicado</small></div><div class="members">+ address: String
++ port: int
++ inc, hb, lastSeq: long
++ count: int
++ records: List&lt;SensorRecord&gt;</div><div class="members">+ encode(): String
++ header(msg): Batch
++ decode(msg, n): Batch</div></div><div class="uml"><div class="head"><b>PartitionLeader</b><small>scheduleAtFixedRate</small></div><div class="members">processInMessage:
+  append + pendentes.add
+
+enviarLote:
+  no lock: troca lista,
+  captura seq, incrementa hb
+  fora do lock: publica + log</div></div></div>
+<div class="package"><h3>Observação local</h3><div class="uml monitor"><div class="head"><b>HeartbeatMonitor</b><small>detetor por partição</small></div><div class="members">- state: State
+- lastNanos: long
+- inc, hb: long
+- timeoutNanos: long</div><div class="members">+ onHeartbeat(inc, hb)
++ check()
++ state(): State</div></div><div class="uml monitor"><div class="head"><b>State «enum»</b><small>resultado local</small></div><div class="members">DESCONHECIDO
+ATIVO
+SUSPEITO</div></div><div class="uml monitor"><div class="head"><b>MonitorLog</b><small>eventos observáveis</small></div><div class="members">- path: Path
++ event(text)
++ received(k, batch)
++ schedule(monitors)</div></div></div></div>
+<h3>Sequência de uma falha e recuperação</h3><div class="timeline"><div class="th">Passo</div><div class="th">PartitionLeader</div><div class="th">Batch</div><div class="th">HeartbeatMonitor</div><div class="th">PartitionReplica</div><div class="step">1 · normal</div><div>fecha pendentes</div><div><code>I1; hb=4; ultimoSeq=2</code></div><div>ATIVO; renova nanoTime</div><div>aplica até seq 2</div><div class="step">2 · falha</div><div>grava seq 3; termina antes do lote</div><div>não publicado</div><div>continua ATIVO até timeout</div><div>continua em seq 2</div><div class="step">3 · silêncio</div><div>sem processo</div><div>sem heartbeat</div><div>check → SUSPEITO</div><div>não promove outro líder</div><div class="step last">4 · reinício</div><div class="last">restaura seq/L/V; inc=I2</div><div class="last"><code>hb=1; ultimoSeq=3; n=0</code></div><div class="last">REINICIO + RETOMA</div><div class="last">last&lt;3 → PEDIDO 3 3</div></div><div class="callout"><b>Publicação fora do synchronized:</b> o bloqueio protege o snapshot coerente. A chamada HTTP pode demorar e não deve impedir novas entradas nem o serviço TCP.</div></div></section>
+
+<section class="view" id="analise"><div class="panel"><div class="section-title"><h2>Verificadores e ficheiros</h2><span>análise posterior, sem participar na entrega</span></div><div class="packages">
+<div class="package"><h3>Classes de análise</h3><div class="uml analysis"><div class="head"><b>HeartbeatCheck</b><small>tempo e eficiência</small></div><div class="members">HB / Event / Stats «internos»
++ main(args): void
+- lines(path): List&lt;String&gt;</div></div><div class="uml analysis"><div class="head"><b>CausalCheck</b><small>invariantes L/V</small></div><div class="members">Event «interno»
+- violations: long
++ check(n, dir): boolean
+- violation(reason): void</div></div><div class="uml analysis"><div class="head"><b>PartitionCheck</b><small>líderes contra réplicas</small></div><div class="members">- readRecords(path)
+- checkSequence(records)
++ main(args): void</div></div></div>
+<div class="package"><h3>Entradas e resultados</h3><div class="filemap"><article><h3>hb-p&lt;k&gt;.txt</h3><p>inc;hb;instante;ultimoSeq;n;bytes.</p></article><article><h3>monitor-&lt;id&gt;.txt</h3><p>RECEBIDO, SUSPEITA, RETOMA, REINICIO, HB_PERDIDO e RECUPERACAO.</p></article><article><h3>lider-p&lt;k&gt;.txt</h3><p>Histórico autoritativo.</p></article><article><h3>replica-&lt;r&gt;-p&lt;k&gt;.txt</h3><p>Cópias aplicadas.</p></article><article><h3>falhas.txt</h3><p>p&lt;k&gt;;instante da falha provocada.</p></article><article><h3>Relatórios</h3><p>heartbeat-check, vista-lamport e PartitionCheck.</p></article></div></div></div>
+<div class="rel"><table><thead><tr><th>Verificador</th><th>Lê</th><th>Consegue concluir</th><th>Não consegue provar</th></tr></thead><tbody><tr><td>HeartbeatCheck</td><td>hb, monitor, líderes, falhas</td><td>intervalos, suspeitas, latência e custos</td><td>leituras perdidas antes do líder</td></tr><tr><td>CausalCheck</td><td>históricos dos líderes</td><td>seq, V[k]=seq e relações causais</td><td>entrega causal nas réplicas</td></tr><tr><td>PartitionCheck</td><td>líderes e réplicas</td><td>igual, prefixo ou divergente</td><td>que uma entrada desconhecida devia existir</td></tr></tbody></table></div></div></section>
+
+<section class="view" id="ligacoes"><div class="panel"><div class="section-title"><h2>Ligações entre as classes</h2><span>vista UML por camadas, ao estilo Draw.io</span></div><p class="intro">As aplicações estão no topo, os serviços no centro, o modelo abaixo e os verificadores no fim. Cada relação segue um corredor curto e entra na classe pelo lado mais próximo.</p>
+<div class="zoom-toolbar" aria-label="Controlos do diagrama"><button type="button" id="zoom-out" title="Diminuir zoom">−</button><button type="button" id="zoom-reset">Repor</button><button type="button" id="zoom-in" title="Aumentar zoom">+</button><span class="zoom-value" id="zoom-value">100%</span><span class="zoom-help">Roda do rato: zoom · arrastar: mover · duplo clique: repor</span></div>
+<div class="diagram-stage" id="diagram-stage"><svg class="drawio" id="class-diagram" viewBox="0 0 1500 1080" role="img" aria-label="Diagrama UML completo das classes da COMINDIR04">
+<defs><marker id="arrow" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto"><path d="M0 0L8 4L0 8Z" fill="#326d91"/></marker><marker id="openArrow" markerWidth="9" markerHeight="9" refX="8" refY="4.5" orient="auto"><path d="M1 1L8 4.5L1 8" fill="none" stroke="#6c7d87"/></marker><marker id="arrowGreen" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto"><path d="M0 0L8 4L0 8Z" fill="#18745d"/></marker><marker id="diamond" markerWidth="12" markerHeight="8" refX="2" refY="4" orient="auto"><path d="M0 4L5 0L10 4L5 8Z" fill="#18745d"/></marker></defs>
+<rect x="20" y="35" width="1460" height="230" rx="12" fill="#f1f8fb" stroke="#b9ccd5" stroke-dasharray="5 4"/><text x="40" y="61" class="group-title">1 · APLICAÇÕES / PROCESSOS</text>
+<rect x="20" y="290" width="1460" height="235" rx="12" fill="#fff9ed" stroke="#d8c7aa" stroke-dasharray="5 4"/><text x="40" y="316" class="group-title">2 · SERVIÇOS USADOS DURANTE A EXECUÇÃO</text>
+<rect x="20" y="550" width="1460" height="215" rx="12" fill="#f3faf5" stroke="#bcd3c3" stroke-dasharray="5 4"/><text x="40" y="576" class="group-title">3 · MODELO, PROTOCOLO E ESTADO</text>
+<rect x="20" y="790" width="1460" height="255" rx="12" fill="#f7f5fc" stroke="#ccc3e1" stroke-dasharray="5 4"/><text x="40" y="816" class="group-title">4 · ANÁLISE POSTERIOR</text>
+<!-- relações curtas em corredores separados -->
+<path class="depend" d="M120 230V345"/><text x="128" y="286" class="rel-label">calcula partição</text>
+<path class="depend" d="M190 230V275H365V345"/><text x="245" y="268" class="rel-label">pub/sub</text>
+<path class="depend" d="M460 230V275H425V345"/><text x="430" y="268" class="rel-label">pub/sub</text>
+<path class="compose" d="M530 230V275H625V345"/><text x="548" y="268" class="rel-label">cria lotes</text>
+<path class="assoc" d="M600 230V265H1265V345"/><text x="810" y="258" class="rel-label">persiste histórico</text>
+<path class="assoc" d="M800 230V345"/><text x="808" y="286" class="rel-label">deteta silêncio</text>
+<path class="assoc" d="M870 230V280H1065V345"/><text x="925" y="273" class="rel-label">regista eventos</text>
+<path class="assoc" d="M1080 230V280H865V345"/><text x="955" y="273" class="rel-label">vigia partições</text>
+<path class="depend" d="M1150 230V255H455V345"/><text x="700" y="248" class="rel-label">pub/sub</text>
+<path class="depend" d="M145 455V595"/><text x="153" y="535" class="rel-label">usa protocolo</text>
+<path class="depend" d="M365 455V520H145V595"/><text x="225" y="513" class="rel-label">tópicos e IN</text>
+<path class="compose" d="M625 470V520H425V595"/><text x="490" y="513" class="rel-label">records 0..*</text>
+<path class="compose" d="M865 455V595"/><text x="873" y="535" class="rel-label">possui estado</text>
+<path class="assoc" d="M1265 455V530H1180V595"/><text x="1190" y="523" class="rel-label">guarda registos</text>
+<path class="compose" d="M555 665H575"/><text x="535" y="655" class="rel-label">contém V</text>
+<path class="depend" d="M505 865V775H625V735"/><text x="515" y="785" class="rel-label">analisa lotes</text>
+<path class="depend" d="M775 865V775H665V735"/><text x="680" y="785" class="rel-label">compara V</text>
+<path class="depend" d="M1045 865V775H1180V735"/><text x="1060" y="785" class="rel-label">compara ficheiros</text>
+<!-- aplicações -->
+<g transform="translate(55 85)"><rect class="box" width="250" height="145"/><rect class="head-app" width="250" height="42"/><line class="divider" y1="42" x2="250" y2="42"/><text x="125" y="18" text-anchor="middle" class="stereo">«application»</text><text x="125" y="35" text-anchor="middle" class="title">Producer</text><text x="12" y="66" class="member">+ main(args): void</text><text x="12" y="88" class="member">- warn(monitor,k,sensor)</text><text x="12" y="118" class="member">envia IN; observa cabeçalhos</text></g>
+<g transform="translate(365 85)"><rect class="box" width="250" height="145"/><rect class="head-app" width="250" height="42"/><line class="divider" y1="42" x2="250" y2="42"/><text x="125" y="18" text-anchor="middle" class="stereo">«application»</text><text x="125" y="35" text-anchor="middle" class="title">PartitionLeader</text><text x="12" y="66" class="member">- seq, L, V, inc, hb</text><text x="12" y="88" class="member">- pendentes: List</text><text x="12" y="112" class="member">+ start() / enviarLote()</text><text x="12" y="132" class="member">- processInMessage()</text></g>
+<g transform="translate(675 85)"><rect class="box" width="250" height="145"/><rect class="head-app" width="250" height="42"/><line class="divider" y1="42" x2="250" y2="42"/><text x="125" y="18" text-anchor="middle" class="stereo">«application»</text><text x="125" y="35" text-anchor="middle" class="title">PartitionReplica</text><text x="12" y="66" class="member">- states: PartitionState[]</text><text x="12" y="90" class="member">+ main(args): void</text><text x="12" y="118" class="member">aplica e recupera por sequência</text></g>
+<g transform="translate(985 85)"><rect class="box" width="250" height="145"/><rect class="head-app" width="250" height="42"/><line class="divider" y1="42" x2="250" y2="42"/><text x="125" y="18" text-anchor="middle" class="stereo">«application»</text><text x="125" y="35" text-anchor="middle" class="title">AlarmProcessor</text><text x="12" y="66" class="member">- seen, L, V</text><text x="12" y="88" class="member">- monitors[]</text><text x="12" y="112" class="member">+ start() / onMessage()</text><text x="12" y="132" class="member">- onRecord()</text></g>
+<!-- serviços -->
+<g transform="translate(55 345)"><rect class="box" width="180" height="110"/><rect class="head-domain" width="180" height="42"/><text x="90" y="18" text-anchor="middle" class="stereo">«service»</text><text x="90" y="35" text-anchor="middle" class="title">Partitioner</text><text x="12" y="70" class="member">- n: int</text><text x="12" y="93" class="member">+ of() / count()</text></g>
+<g transform="translate(275 345)"><rect class="box" width="180" height="110"/><rect class="head-domain" width="180" height="42"/><text x="90" y="18" text-anchor="middle" class="stereo">«adapter»</text><text x="90" y="35" text-anchor="middle" class="title">IpfsPubSub</text><text x="12" y="70" class="member">+ publish()</text><text x="12" y="93" class="member">+ subscribe()</text></g>
+<g transform="translate(495 345)"><rect class="box" width="260" height="125"/><rect class="head-monitor" width="260" height="42"/><text x="130" y="18" text-anchor="middle" class="stereo">«value object»</text><text x="130" y="35" text-anchor="middle" class="title">Batch</text><text x="12" y="68" class="member">+ inc, hb, lastSeq, count</text><text x="12" y="89" class="member">+ records: List&lt;SensorRecord&gt;</text><text x="12" y="111" class="member">+ encode() / header() / decode()</text></g>
+<g transform="translate(775 345)"><rect class="box" width="180" height="110"/><rect class="head-monitor" width="180" height="42"/><text x="90" y="18" text-anchor="middle" class="stereo">«failure detector»</text><text x="90" y="35" text-anchor="middle" class="title">HeartbeatMonitor</text><text x="12" y="70" class="member">+ onHeartbeat()</text><text x="12" y="93" class="member">+ check() / state()</text></g>
+<g transform="translate(975 345)"><rect class="box" width="180" height="110"/><rect class="head-monitor" width="180" height="42"/><text x="90" y="18" text-anchor="middle" class="stereo">«logger»</text><text x="90" y="35" text-anchor="middle" class="title">MonitorLog</text><text x="12" y="70" class="member">+ event() / received()</text><text x="12" y="93" class="member">+ schedule()</text></g>
+<g transform="translate(1175 345)"><rect class="box" width="180" height="110"/><rect class="head-domain" width="180" height="42"/><text x="90" y="18" text-anchor="middle" class="stereo">«repository»</text><text x="90" y="35" text-anchor="middle" class="title">RecordFile</text><text x="12" y="70" class="member">+ append() / last()</text><text x="12" y="93" class="member">+ range()</text></g>
+<!-- modelo e estado -->
+<g transform="translate(55 595)"><rect class="box" width="180" height="140"/><rect class="head-domain" width="180" height="42"/><text x="90" y="18" text-anchor="middle" class="stereo">«protocol»</text><text x="90" y="35" text-anchor="middle" class="title">Wire</text><text x="12" y="70" class="member">+ topicIn()</text><text x="12" y="91" class="member">+ topicData()</text><text x="12" y="112" class="member">+ in() / inParts()</text></g>
+<g transform="translate(295 595)"><rect class="box" width="260" height="140"/><rect class="head-domain" width="260" height="42"/><text x="130" y="18" text-anchor="middle" class="stereo">«entity»</text><text x="130" y="35" text-anchor="middle" class="title">SensorRecord</text><text x="12" y="70" class="member">- seq, sensor, temp, instante</text><text x="12" y="91" class="member">- L, V: VectorClock</text><text x="12" y="114" class="member">+ now() / toLine() / fromLine()</text></g>
+<g transform="translate(575 595)"><rect class="box" width="180" height="140"/><rect class="head-domain" width="180" height="42"/><text x="90" y="18" text-anchor="middle" class="stereo">«causal clock»</text><text x="90" y="35" text-anchor="middle" class="title">VectorClock</text><text x="12" y="70" class="member">- v: long[]</text><text x="12" y="91" class="member">+ merge() / tick()</text><text x="12" y="112" class="member">+ compare() / parse()</text></g>
+<g transform="translate(795 595)"><rect class="box" width="220" height="105"/><rect class="head-monitor" width="220" height="42"/><text x="110" y="18" text-anchor="middle" class="stereo">«enumeration»</text><text x="110" y="35" text-anchor="middle" class="title">HeartbeatMonitor.State</text><text x="12" y="74" class="member">DESCONHECIDO · ATIVO · SUSPEITO</text></g>
+<g transform="translate(1055 595)"><rect class="box" width="250" height="140"/><rect class="head-app" width="250" height="42"/><text x="125" y="18" text-anchor="middle" class="stereo">«inner class»</text><text x="125" y="35" text-anchor="middle" class="title">PartitionState</text><text x="12" y="70" class="member">- last, pending, file</text><text x="12" y="92" class="member">+ onPubSubMessage()</text><text x="12" y="114" class="member">- applyRule() / recover()</text></g>
+<!-- verificadores offline -->
+<g transform="translate(375 865)"><rect class="box" width="260" height="130"/><rect class="head-analysis" width="260" height="42"/><text x="130" y="18" text-anchor="middle" class="stereo">«offline analyzer»</text><text x="130" y="35" text-anchor="middle" class="title">HeartbeatCheck</text><text x="12" y="72" class="member">+ main(args)</text><text x="12" y="96" class="member">tempo, lotes, latência, bytes</text></g>
+<g transform="translate(645 865)"><rect class="box" width="260" height="130"/><rect class="head-analysis" width="260" height="42"/><text x="130" y="18" text-anchor="middle" class="stereo">«offline analyzer»</text><text x="130" y="35" text-anchor="middle" class="title">CausalCheck</text><text x="12" y="72" class="member">+ check(n,dir)</text><text x="12" y="96" class="member">seq, L, V e causalidade</text></g>
+<g transform="translate(915 865)"><rect class="box" width="260" height="130"/><rect class="head-analysis" width="260" height="42"/><text x="130" y="18" text-anchor="middle" class="stereo">«offline analyzer»</text><text x="130" y="35" text-anchor="middle" class="title">PartitionCheck</text><text x="12" y="72" class="member">- readRecords() / checkSequence()</text><text x="12" y="96" class="member">líder contra réplicas</text></g>
+</svg></div>
+<div class="diagram-legend"><span><i class="sample"></i>associação: guarda referência</span><span><i class="sample dashed"></i>dependência: usa ou cria</span><span><i class="sample green"></i>composição: controla o ciclo de vida</span></div><div class="callout"><b>Organização:</b> as setas descem sempre da classe utilizadora para a classe usada. Os verificadores ficam isolados na última camada porque só leem resultados depois da execução.</div></div></section>
+</main>
+<section class="foot"><h2>Como ler</h2><p><b>Associação:</b> a classe guarda a referência num campo. <b>Dependência:</b> usa ou cria o objeto localmente. Não há herança entre as classes da aplicação.</p><p>Kubo, HttpClient, sockets e executores são infraestrutura externa. As classes comuns existem como cópias em projetos diferentes; isso não significa memória partilhada entre JVMs.</p></section>
+<script>
+const B=[...document.querySelectorAll('[data-view]')],V=[...document.querySelectorAll('.view')];
+function show(id){B.forEach(b=>b.setAttribute('aria-selected',String(b.dataset.view===id)));V.forEach(v=>v.classList.toggle('active',v.id===id));location.hash=id}
+B.forEach(b=>b.onclick=()=>show(b.dataset.view));const h=location.hash.slice(1);if(V.some(v=>v.id===h))show(h);
+
+// Controla o zoom e o movimento da vista UML sem alterar o desenho original.
+const svg=document.getElementById('class-diagram'),stage=document.getElementById('diagram-stage'),zoomValue=document.getElementById('zoom-value');
+const initial={x:0,y:0,w:1500,h:1080};let view={...initial},drag=null;
+function renderView(){svg.setAttribute('viewBox',`${view.x} ${view.y} ${view.w} ${view.h}`);zoomValue.textContent=`${Math.round(initial.w/view.w*100)}%`}
+function resetView(){view={...initial};renderView()}
+function zoomAt(factor,clientX,clientY){const rect=svg.getBoundingClientRect();if(!rect.width||!rect.height)return;const oldW=view.w,oldH=view.h,newW=Math.min(initial.w/0.4,Math.max(initial.w/3,oldW*factor)),newH=oldH*(newW/oldW);const px=(clientX-rect.left)/rect.width,py=(clientY-rect.top)/rect.height;view.x+=px*(oldW-newW);view.y+=py*(oldH-newH);view.w=newW;view.h=newH;renderView()}
+document.getElementById('zoom-in').onclick=()=>{const r=svg.getBoundingClientRect();zoomAt(.8,r.left+r.width/2,r.top+r.height/2)};
+document.getElementById('zoom-out').onclick=()=>{const r=svg.getBoundingClientRect();zoomAt(1.25,r.left+r.width/2,r.top+r.height/2)};
+document.getElementById('zoom-reset').onclick=resetView;
+stage.addEventListener('wheel',e=>{e.preventDefault();zoomAt(e.deltaY<0?.86:1.16,e.clientX,e.clientY)},{passive:false});
+stage.addEventListener('pointerdown',e=>{drag={x:e.clientX,y:e.clientY,vx:view.x,vy:view.y};stage.setPointerCapture(e.pointerId);stage.classList.add('dragging')});
+stage.addEventListener('pointermove',e=>{if(!drag)return;const r=svg.getBoundingClientRect();view.x=drag.vx-(e.clientX-drag.x)*view.w/r.width;view.y=drag.vy-(e.clientY-drag.y)*view.h/r.height;renderView()});
+function stopDrag(){drag=null;stage.classList.remove('dragging')}stage.addEventListener('pointerup',stopDrag);stage.addEventListener('pointercancel',stopDrag);stage.addEventListener('dblclick',resetView);renderView();
+</script>
+</body></html>

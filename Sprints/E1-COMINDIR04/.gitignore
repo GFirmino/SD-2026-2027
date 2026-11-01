@@ -1,0 +1,10 @@
+build/
+bin/
+*.class
+lider-p*.txt
+replica-*-p*.txt
+vista-lamport.txt
+
+hb-p*.txt
+monitor-*.txt
+heartbeat-check.txt
