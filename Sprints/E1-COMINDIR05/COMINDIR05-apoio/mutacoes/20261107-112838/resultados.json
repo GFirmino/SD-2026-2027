@@ -1,0 +1,67 @@
+{
+  "maioria": {
+    "execucao": "1794050920093;TERMO;p0;termo=0;arranque=sim\n1794050920100;TERMO;p0;termo=0;arranque=sim\n1794050920101;TERMO;p0;termo=0;arranque=sim\n1794050920102;TERMO;p1;termo=0;arranque=sim\n1794050920104;TERMO;p1;termo=0;arranque=sim\n1794050920106;TERMO;p1;termo=0;arranque=sim\n1794050920107;TERMO;p2;termo=0;arranque=sim\n1794050920108;TERMO;p2;termo=0;arranque=sim\n1794050920110;TERMO;p2;termo=0;arranque=sim\n1794050920110;CANDIDATO;p0;termo=1;voto=n1\n1794050920122;TERMO;p0;termo=1;anterior=0\n1794050920128;VOTO;p0;termo=1;pedidoTermo=1;candidato=n1;concedido\n1794050920132;LIDER;p0;termo=1;votos=[1, 2]\n1794050920134;CANDIDATO;p2;termo=1;voto=n1\n1794050920135;TERMO;p2;termo=1;anterior=0\n1794050920136;VOTO;p2;termo=1;pedidoTermo=1;candidato=n1;concedido\n1794050920136;LIDER;p2;termo=1;votos=[1, 2]\n1794050920137;CANDIDATO;p1;termo=1;voto=n1\n1794050920138;CANDIDATO;p1;termo=1;voto=n3\n1794050920138;LIDER;p1;termo=1;votos=[1]\n1794050920138;LIDER;p1;termo=1;votos=[3]\nMUTACAO EXECUTADA: maioria\n",
+    "verificadores": {
+      "RaftCheck": {
+        "exit": 2,
+        "saida": "RAFT CHECK\np0 termo=1 candidatos=[1] votos=[n2->n1:concedido] lideres=[1] eleicao_ms=22\nARRANQUE;p0;primeiro_lider_ms=39\nCOINCIDENCIA;p0;divergentes=[];tamanhos=[0, 0, 0];completa=true\nLEITURAS;p0;enviadas=0;perdidas=0\np1 termo=1 candidatos=[1, 3] votos=[] lideres=[1, 3] eleicao_ms=1\nARRANQUE;p1;primeiro_lider_ms=36\nCOINCIDENCIA;p1;divergentes=[];tamanhos=[0, 0, 0];completa=true\nLEITURAS;p1;enviadas=0;perdidas=0\np2 termo=1 candidatos=[1] votos=[n2->n1:concedido] lideres=[1] eleicao_ms=2\nARRANQUE;p2;primeiro_lider_ms=29\nCOINCIDENCIA;p2;divergentes=[];tamanhos=[0, 0, 0];completa=true\nLEITURAS;p2;enviadas=0;perdidas=0\nMONITOR;produtor;novos_lideres=0\nMONITOR;processador;novos_lideres=0\nRESUMO;termos_multiplos_lideres=1;termos_decrescentes=0;seq_divergentes=0;copias_incompletas=0;perdidas=0;truncados=0;noutro_seq=0\nRESULTADO: FALHOU\n"
+      },
+      "CausalCheck": {
+        "exit": 0,
+        "saida": "CAUSAL CHECK\nRegistos canonicos: 0\nPares causais: 0\nPares concorrentes: 0\nConcorrentes com L distinto: 0\nViolacoes: 0\nRESULTADO: OK\n"
+      }
+    }
+  },
+  "persistencia": {
+    "execucao": "1794050921678;TERMO;p0;termo=0;arranque=sim\n1794050921696;TERMO;p0;termo=0;arranque=sim\n1794050921697;TERMO;p0;termo=0;arranque=sim\n1794050921698;TERMO;p1;termo=0;arranque=sim\n1794050921699;TERMO;p1;termo=0;arranque=sim\n1794050921700;TERMO;p1;termo=0;arranque=sim\n1794050921701;TERMO;p2;termo=0;arranque=sim\n1794050921702;TERMO;p2;termo=0;arranque=sim\n1794050921703;TERMO;p2;termo=0;arranque=sim\n1794050921707;CANDIDATO;p0;termo=1;voto=n1\n1794050921712;TERMO;p0;termo=1;anterior=0\n1794050921712;VOTO;p0;termo=1;pedidoTermo=1;candidato=n1;concedido\n1794050921712;LIDER;p0;termo=1;votos=[1, 2]\n1794050921712;CANDIDATO;p2;termo=1;voto=n1\n1794050921712;TERMO;p2;termo=1;anterior=0\n1794050921712;VOTO;p2;termo=1;pedidoTermo=1;candidato=n1;concedido\n1794050921712;LIDER;p2;termo=1;votos=[1, 2]\n1794050921712;CANDIDATO;p1;termo=1;voto=n1\n1794050921712;CANDIDATO;p1;termo=1;voto=n3\n1794050921712;TERMO;p1;termo=1;anterior=0\n1794050921712;VOTO;p1;termo=1;pedidoTermo=1;candidato=n1;concedido\n1794050921723;LIDER;p1;termo=1;votos=[1, 2]\n1794050921723;TERMO;p1;termo=0;arranque=sim\n1794050921723;TERMO;p1;termo=1;anterior=0\n1794050921723;VOTO;p1;termo=1;pedidoTermo=1;candidato=n3;concedido\n1794050921723;LIDER;p1;termo=1;votos=[2, 3]\nMUTACAO EXECUTADA: persistencia\n",
+    "verificadores": {
+      "RaftCheck": {
+        "exit": 2,
+        "saida": "RAFT CHECK\np0 termo=1 candidatos=[1] votos=[n2->n1:concedido] lideres=[1] eleicao_ms=5\nARRANQUE;p0;primeiro_lider_ms=34\nCOINCIDENCIA;p0;divergentes=[];tamanhos=[0, 0, 0];completa=true\nLEITURAS;p0;enviadas=0;perdidas=0\np1 termo=1 candidatos=[1, 3] votos=[n2->n1:concedido, n2->n3:concedido] lideres=[1, 3] eleicao_ms=11\nARRANQUE;p1;primeiro_lider_ms=25\nCOINCIDENCIA;p1;divergentes=[];tamanhos=[0, 0, 0];completa=true\nLEITURAS;p1;enviadas=0;perdidas=0\np2 termo=1 candidatos=[1] votos=[n2->n1:concedido] lideres=[1] eleicao_ms=0\nARRANQUE;p2;primeiro_lider_ms=11\nCOINCIDENCIA;p2;divergentes=[];tamanhos=[0, 0, 0];completa=true\nLEITURAS;p2;enviadas=0;perdidas=0\nMONITOR;produtor;novos_lideres=0\nMONITOR;processador;novos_lideres=0\nRESUMO;termos_multiplos_lideres=1;termos_decrescentes=8;seq_divergentes=0;copias_incompletas=0;perdidas=0;truncados=0;noutro_seq=0\nRESULTADO: FALHOU\n"
+      },
+      "CausalCheck": {
+        "exit": 0,
+        "saida": "CAUSAL CHECK\nRegistos canonicos: 0\nPares causais: 0\nPares concorrentes: 0\nConcorrentes com L distinto: 0\nViolacoes: 0\nRESULTADO: OK\n"
+      }
+    }
+  },
+  "atualizacao": {
+    "execucao": "1794050923029;TERMO;p0;termo=0;arranque=sim\n1794050923048;TERMO;p0;termo=0;arranque=sim\n1794050923048;TERMO;p0;termo=0;arranque=sim\n1794050923048;TERMO;p1;termo=1;arranque=sim\n1794050923048;TERMO;p1;termo=1;arranque=sim\n1794050923048;TERMO;p1;termo=1;arranque=sim\n1794050923056;TERMO;p2;termo=0;arranque=sim\n1794050923056;TERMO;p2;termo=0;arranque=sim\n1794050923056;TERMO;p2;termo=0;arranque=sim\n1794050923064;CANDIDATO;p0;termo=1;voto=n1\n1794050923064;TERMO;p0;termo=1;anterior=0\n1794050923074;VOTO;p0;termo=1;pedidoTermo=1;candidato=n1;concedido\n1794050923079;LIDER;p0;termo=1;votos=[1, 2]\n1794050923081;CANDIDATO;p2;termo=1;voto=n1\n1794050923082;TERMO;p2;termo=1;anterior=0\n1794050923082;VOTO;p2;termo=1;pedidoTermo=1;candidato=n1;concedido\n1794050923082;LIDER;p2;termo=1;votos=[1, 2]\n1794050923082;CANDIDATO;p1;termo=2;voto=n1\n1794050923112;TERMO;p1;termo=2;anterior=1\n1794050923112;VOTO;p1;termo=2;pedidoTermo=2;candidato=n1;concedido\n1794050923112;LIDER;p1;termo=2;votos=[1, 2]\n1794050923280;TERMO;p1;termo=2;arranque=sim;no=n2\n1794050923280;NOVO_LIDER;p1;termo=2;lider=n1\n1794050923280;RECEBIDO;p1;termo=2;lider=n1;hb=1;ultimoSeq=0\n1794050923297;TRUNCADO;p1;de=1;descartados=2;termos=1,1;registos=MTsxO1MwMjsyMC4wMTsyMDI2LTExLTA3VDExOjI4OjQzLjA5NzQ5NjgwMDsxOzAsMSwwCjI7MTtTMDI7MjAuMDI7MjAyNi0xMS0wN1QxMToyODo0My4xMTI0OTU1MDA7MjswLDIsMA\n1794050923299;TERMO;p1;termo=1;arranque=sim;no=n3\n1794050923300;TERMO;p1;termo=2;anterior=1\n1794050923300;NOVO_LIDER;p1;termo=2;lider=n1\n1794050923301;RECEBIDO;p1;termo=2;lider=n1;hb=1;ultimoSeq=0\n1794050923302;TRUNCADO;p1;de=1;descartados=2;termos=1,1;registos=MTsxO1MwMjsyMC4wMTsyMDI2LTExLTA3VDExOjI4OjQzLjExMjQ5NTUwMDsxOzAsMSwwCjI7MTtTMDI7MjAuMDI7MjAyNi0xMS0wN1QxMToyODo0My4xMTI0OTU1MDA7MjswLDIsMA\nMUTACAO EXECUTADA: atualizacao\n",
+    "verificadores": {
+      "RaftCheck": {
+        "exit": 0,
+        "saida": "RAFT CHECK\np0 termo=1 candidatos=[1] votos=[n2->n1:concedido] lideres=[1] eleicao_ms=15\nARRANQUE;p0;primeiro_lider_ms=50\nCOINCIDENCIA;p0;divergentes=[];tamanhos=[0, 0, 0];completa=true\nLEITURAS;p0;enviadas=0;perdidas=0\np1 termo=1 candidatos=[] votos=[] lideres=[]\np1 termo=2 candidatos=[1] votos=[n2->n1:concedido] lideres=[1] eleicao_ms=30\nARRANQUE;p1;primeiro_lider_ms=64\nCOINCIDENCIA;p1;divergentes=[];tamanhos=[0, 0, 0];completa=true\nLEITURAS;p1;enviadas=0;perdidas=0\n1794050923297;TRUNCADO;p1;de=1;descartados=2;termos=1,1;registos=MTsxO1MwMjsyMC4wMTsyMDI2LTExLTA3VDExOjI4OjQzLjA5NzQ5NjgwMDsxOzAsMSwwCjI7MTtTMDI7MjAuMDI7MjAyNi0xMS0wN1QxMToyODo0My4xMTI0OTU1MDA7MjswLDIsMA;noutro_seq=0\n1794050923302;TRUNCADO;p1;de=1;descartados=2;termos=1,1;registos=MTsxO1MwMjsyMC4wMTsyMDI2LTExLTA3VDExOjI4OjQzLjExMjQ5NTUwMDsxOzAsMSwwCjI7MTtTMDI7MjAuMDI7MjAyNi0xMS0wN1QxMToyODo0My4xMTI0OTU1MDA7MjswLDIsMA;noutro_seq=0\np2 termo=1 candidatos=[1] votos=[n2->n1:concedido] lideres=[1] eleicao_ms=1\nARRANQUE;p2;primeiro_lider_ms=26\nCOINCIDENCIA;p2;divergentes=[];tamanhos=[0, 0, 0];completa=true\nLEITURAS;p2;enviadas=0;perdidas=0\nMONITOR;produtor;novos_lideres=0\nMONITOR;processador;novos_lideres=0\nRESUMO;termos_multiplos_lideres=0;termos_decrescentes=0;seq_divergentes=0;copias_incompletas=0;perdidas=0;truncados=4;noutro_seq=0\nRESULTADO: OK\n"
+      },
+      "CausalCheck": {
+        "exit": 0,
+        "saida": "CAUSAL CHECK\nRegistos canonicos: 0\nPares causais: 0\nPares concorrentes: 0\nConcorrentes com L distinto: 0\nViolacoes: 0\nRESULTADO: OK\n"
+      }
+    }
+  },
+  "obsoleto": {
+    "execucao": "1794050925148;TERMO;p0;termo=0;arranque=sim\n1794050925160;TERMO;p0;termo=0;arranque=sim\n1794050925161;TERMO;p0;termo=0;arranque=sim\n1794050925164;TERMO;p1;termo=0;arranque=sim\n1794050925164;TERMO;p1;termo=0;arranque=sim\n1794050925164;TERMO;p1;termo=0;arranque=sim\n1794050925164;TERMO;p2;termo=0;arranque=sim\n1794050925164;TERMO;p2;termo=0;arranque=sim\n1794050925169;TERMO;p2;termo=0;arranque=sim\n1794050925177;CANDIDATO;p0;termo=1;voto=n1\n1794050925182;TERMO;p0;termo=1;anterior=0\n1794050925182;VOTO;p0;termo=1;pedidoTermo=1;candidato=n1;concedido\n1794050925182;LIDER;p0;termo=1;votos=[1, 2]\n1794050925182;CANDIDATO;p2;termo=1;voto=n1\n1794050925193;TERMO;p2;termo=1;anterior=0\n1794050925195;VOTO;p2;termo=1;pedidoTermo=1;candidato=n1;concedido\n1794050925195;LIDER;p2;termo=1;votos=[1, 2]\n1794050925196;CANDIDATO;p1;termo=1;voto=n1\n1794050925196;TERMO;p1;termo=1;anterior=0\n1794050925196;VOTO;p1;termo=1;pedidoTermo=1;candidato=n1;concedido\n1794050925196;LIDER;p1;termo=1;votos=[1, 2]\n1794050925379;TERMO;p1;termo=3;arranque=sim;no=n2\n1794050925379;NOVO_LIDER;p1;termo=3;lider=n3\n1794050925395;RECEBIDO;p1;termo=2;lider=n3;hb=1;ultimoSeq=0\n1794050925403;TRUNCADO;p1;de=1;descartados=1;termos=1;registos=MTsxO1MwMjsyMC4wMTsyMDI2LTExLTA3VDExOjI4OjQ1LjIxNjU2NDUwMDsxOzAsMSww\nMUTACAO EXECUTADA: obsoleto\n",
+    "verificadores": {
+      "RaftCheck": {
+        "exit": 2,
+        "saida": "RAFT CHECK\np0 termo=1 candidatos=[1] votos=[n2->n1:concedido] lideres=[1] eleicao_ms=5\nARRANQUE;p0;primeiro_lider_ms=34\nCOINCIDENCIA;p0;divergentes=[];tamanhos=[0, 0, 0];completa=true\nLEITURAS;p0;enviadas=0;perdidas=0\np1 termo=1 candidatos=[1] votos=[n2->n1:concedido] lideres=[1] eleicao_ms=0\np1 termo=2 candidatos=[] votos=[] lideres=[]\np1 termo=3 candidatos=[] votos=[] lideres=[]\nARRANQUE;p1;primeiro_lider_ms=32\nCOINCIDENCIA;p1;divergentes=[];tamanhos=[1, 0, 1];completa=false\nLEITURAS;p1;enviadas=0;perdidas=0\n1794050925403;TRUNCADO;p1;de=1;descartados=1;termos=1;registos=MTsxO1MwMjsyMC4wMTsyMDI2LTExLTA3VDExOjI4OjQ1LjIxNjU2NDUwMDsxOzAsMSww;noutro_seq=0\np2 termo=1 candidatos=[1] votos=[n2->n1:concedido] lideres=[1] eleicao_ms=13\nARRANQUE;p2;primeiro_lider_ms=31\nCOINCIDENCIA;p2;divergentes=[];tamanhos=[0, 0, 0];completa=true\nLEITURAS;p2;enviadas=0;perdidas=0\nMONITOR;produtor;novos_lideres=0\nMONITOR;processador;novos_lideres=0\nRESUMO;termos_multiplos_lideres=0;termos_decrescentes=0;seq_divergentes=0;copias_incompletas=1;perdidas=0;truncados=1;noutro_seq=0\nRESULTADO: FALHOU\n"
+      },
+      "CausalCheck": {
+        "exit": 0,
+        "saida": "CAUSAL CHECK\nRegistos canonicos: 1\nPares causais: 0\nPares concorrentes: 0\nConcorrentes com L distinto: 0\nViolacoes: 0\nRESULTADO: OK\n"
+      }
+    }
+  },
+  "relogios": {
+    "execucao": "1794050927266;TERMO;p0;termo=0;arranque=sim\n1794050927277;TERMO;p0;termo=0;arranque=sim\n1794050927283;TERMO;p0;termo=0;arranque=sim\n1794050927283;TERMO;p1;termo=0;arranque=sim\n1794050927285;TERMO;p1;termo=0;arranque=sim\n1794050927285;TERMO;p1;termo=0;arranque=sim\n1794050927287;TERMO;p2;termo=0;arranque=sim\n1794050927287;TERMO;p2;termo=0;arranque=sim\n1794050927289;TERMO;p2;termo=0;arranque=sim\n1794050927297;CANDIDATO;p0;termo=1;voto=n1\n1794050927300;TERMO;p0;termo=1;anterior=0\n1794050927304;VOTO;p0;termo=1;pedidoTermo=1;candidato=n1;concedido\n1794050927308;LIDER;p0;termo=1;votos=[1, 2]\n1794050927309;CANDIDATO;p2;termo=1;voto=n1\n1794050927310;TERMO;p2;termo=1;anterior=0\n1794050927310;VOTO;p2;termo=1;pedidoTermo=1;candidato=n1;concedido\n1794050927310;LIDER;p2;termo=1;votos=[1, 2]\n1794050927310;CANDIDATO;p1;termo=1;voto=n1\n1794050927310;TERMO;p1;termo=1;anterior=0\n1794050927310;VOTO;p1;termo=1;pedidoTermo=1;candidato=n1;concedido\n1794050927310;LIDER;p1;termo=1;votos=[1, 2]\n1794050927493;TERMO;p1;termo=1;arranque=sim;no=n1\n1794050927493;CANDIDATO;p1;termo=2;voto=n1\n1794050927493;LIDER;p1;termo=2;votos=[1, 2]\nINVARIANTE BLOQUEOU A ESCRITA\nMUTACAO EXECUTADA: relogios\n",
+    "verificadores": {
+      "RaftCheck": {
+        "exit": 0,
+        "saida": "RAFT CHECK\np0 termo=1 candidatos=[1] votos=[n2->n1:concedido] lideres=[1] eleicao_ms=11\nARRANQUE;p0;primeiro_lider_ms=42\nCOINCIDENCIA;p0;divergentes=[];tamanhos=[0, 0, 0];completa=true\nLEITURAS;p0;enviadas=0;perdidas=0\np1 termo=1 candidatos=[1] votos=[n2->n1:concedido] lideres=[1] eleicao_ms=0\np1 termo=2 candidatos=[1] votos=[] lideres=[1] eleicao_ms=0\nARRANQUE;p1;primeiro_lider_ms=27\nCOINCIDENCIA;p1;divergentes=[];tamanhos=[1, 1, 1];completa=true\nLEITURAS;p1;enviadas=0;perdidas=0\np2 termo=1 candidatos=[1] votos=[n2->n1:concedido] lideres=[1] eleicao_ms=1\nARRANQUE;p2;primeiro_lider_ms=23\nCOINCIDENCIA;p2;divergentes=[];tamanhos=[0, 0, 0];completa=true\nLEITURAS;p2;enviadas=0;perdidas=0\nMONITOR;produtor;novos_lideres=0\nMONITOR;processador;novos_lideres=0\nRESUMO;termos_multiplos_lideres=0;termos_decrescentes=0;seq_divergentes=0;copias_incompletas=0;perdidas=0;truncados=0;noutro_seq=0\nRESULTADO: OK\n"
+      },
+      "CausalCheck": {
+        "exit": 0,
+        "saida": "CAUSAL CHECK\nRegistos canonicos: 1\nPares causais: 0\nPares concorrentes: 0\nConcorrentes com L distinto: 0\nViolacoes: 0\nRESULTADO: OK\n"
+      }
+    }
+  }
+}
