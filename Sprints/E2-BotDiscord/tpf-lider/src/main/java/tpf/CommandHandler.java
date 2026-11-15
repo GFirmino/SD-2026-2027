@@ -20,12 +20,12 @@ public class CommandHandler {
 
     private final long guildId;
 
-    // Guarda o servidor no qual estes comandos podem ser executados.
+    // Configuração partilhada por todos os comandos: guarda o servidor onde podem ser executados.
     public CommandHandler(long guildId) {
         this.guildId = guildId;
     }
 
-    // Verifica o contexto e a autorização antes de interpretar o pedido.
+    // Entrada comum a todos os comandos: verifica o servidor e a autorização antes de tratar o pedido.
     public void handle(SlashCommandInteractionEvent event) {
         if (!event.isFromGuild() || event.getGuild().getIdLong() != guildId) {
             reply(event, "Este comando só pode ser usado no servidor de teste configurado.", true);
@@ -43,14 +43,15 @@ public class CommandHandler {
             reply(event, "Argumentos inválidos: " + exception.getMessage(), true);
         }
     }
-
-    // Verifica os papéis de quem invocou o comando, não os papéis do bot.
+    
+    // verifica se o utilizador que executou o comando tem o papel admin-arquivo.
     private boolean hasAdminRole(SlashCommandInteractionEvent event) {
         return event.getMember() != null && event.getMember().getRoles().stream()
                 .anyMatch(role -> ADMIN_ROLE_NAME.equals(role.getName()));
     }
 
-    // Escolhe o tratamento correspondente ao nome do comando recebido.
+    // Encaminhamento de todos os comandos: trata /registar, /estado, /replica-token e /replica-remover
+    // diretamente e delega os restantes nos métodos específicos abaixo.
     private String buildReply(SlashCommandInteractionEvent event) {
         return switch (event.getName()) {
             case "registar" -> "/registar recebido: texto=" + readText(event, "texto") + " — ainda não implementado";
@@ -66,7 +67,8 @@ public class CommandHandler {
         };
     }
 
-    // Gera a ajuda a partir das definições, para acompanhar novos comandos automaticamente.
+    // Tratamento de /comandos-lider e /comandos-admin: gera a ajuda a partir das definições.
+    // includeAdmin indica se também deve apresentar os comandos administrativos.
     private String buildHelp(boolean includeAdmin) {
         StringBuilder leaderHelp = new StringBuilder("**Comandos do líder**\n");
         StringBuilder adminHelp = new StringBuilder("\n**Comandos administrativos — papel admin-arquivo**\n");
@@ -98,7 +100,7 @@ public class CommandHandler {
         return leaderHelp.toString();
     }
 
-    // Apresenta a sintaxe e uma descrição breve numa linha por comando.
+    // Auxiliar de /comandos-lider e /comandos-admin: acrescenta a sintaxe e a descrição de um comando à ajuda.
     private void appendHelpEntry(StringBuilder section, String name, List<OptionData> options, String description) {
         section.append("• `/").append(name);
         for (OptionData option : options) {
@@ -108,7 +110,7 @@ public class CommandHandler {
         section.append("` — ").append(description).append("\n");
     }
 
-    // 'r' é um subcomando de 'config'; 'n' é o seu parâmetro inteiro.
+    // Tratamento do comando /config r <n>: valida o subcomando r e confirma o fator de replicação pedido.
     private String handleConfig(SlashCommandInteractionEvent event) {
         if (!"r".equals(event.getSubcommandName())) {
             throw new IllegalArgumentException("usa /config r com o parâmetro n.");
@@ -117,7 +119,7 @@ public class CommandHandler {
         return "/config r recebido: n=" + replicationFactor + " — ainda não implementado";
     }
 
-    // Além do tipo inteiro, verifica a ordem dos extremos do intervalo.
+    // Tratamento do comando /recuperar <de> <ate>: valida os inteiros e a ordem dos extremos do intervalo.
     private String handleRecovery(SlashCommandInteractionEvent event) {
         long from = readInteger(event, "de", 0);
         long to = readInteger(event, "ate", 0);
@@ -128,7 +130,7 @@ public class CommandHandler {
         return "/recuperar recebido: de=" + from + ", ate=" + to + " — ainda não implementado";
     }
 
-    // Confirma os parâmetros; neste sprint não envia uma rajada real.
+    // Tratamento do comando /rajada <n> <intervaloms>: valida a quantidade e o intervalo e devolve uma confirmação provisória.
     private String handleBurst(SlashCommandInteractionEvent event) {
         long count = readInteger(event, "n", 1);
         long intervalMs = readInteger(event, "intervaloms", 0);
@@ -136,7 +138,8 @@ public class CommandHandler {
         return "/rajada recebido: n=" + count + ", intervaloMs=" + intervalMs + " — ainda não implementado";
     }
 
-    // Centraliza a leitura de argumentos obrigatórios e verifica o tipo.
+    // Auxiliar de /registar, /config, /recuperar, /replica-remover e /rajada:
+    // lê um argumento obrigatório e verifica se tem o tipo esperado.
     private OptionMapping readOption(SlashCommandInteractionEvent event, String name, OptionType type) {
         OptionMapping option = event.getOption(name);
 
@@ -146,7 +149,7 @@ public class CommandHandler {
         return option;
     }
 
-    // Rejeita texto vazio, preservando o texto original na confirmação.
+    // Auxiliar de /registar e /replica-remover: rejeita texto vazio e preserva o texto original na confirmação.
     private String readText(SlashCommandInteractionEvent event, String name) {
         String value = readOption(event, name, OptionType.STRING).getAsString();
 
@@ -156,7 +159,7 @@ public class CommandHandler {
         return value;
     }
 
-    // Repete a validação numérica no programa, mesmo existindo limites na interface.
+    // Auxiliar de /config r, /recuperar e /rajada: lê um inteiro e verifica o valor mínimo permitido.
     private long readInteger(SlashCommandInteractionEvent event, String name, long minimum) {
         long value = readOption(event, name, OptionType.INTEGER).getAsLong();
 
@@ -167,7 +170,7 @@ public class CommandHandler {
         return value;
     }
 
-    // Erros e ajuda ficam visíveis apenas ao autor; o texto ecoado não ativa menções.
+    // Resposta comum a todos os comandos: erros e ajuda ficam visíveis apenas ao autor; o texto ecoado não ativa menções.
     private void reply(SlashCommandInteractionEvent event, String message, boolean ephemeral) {
         var replyAction = event.reply(message.length() <= 2000
                 ? message : "Pedido recebido. A confirmação completa segue no ficheiro.")
