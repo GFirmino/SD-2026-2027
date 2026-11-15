@@ -5,6 +5,8 @@ out/
 # Credenciais e configuracao local
 .env
 .env.*
+.run
+.run.*
 !.env.example
 token.txt
 master.key

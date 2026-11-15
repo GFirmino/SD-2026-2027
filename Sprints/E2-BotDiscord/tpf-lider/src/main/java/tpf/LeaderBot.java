@@ -3,6 +3,7 @@ package tpf;
 import net.dv8tion.jda.api.JDABuilder;
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
+import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import net.dv8tion.jda.api.events.session.ReadyEvent;
 import net.dv8tion.jda.api.events.session.ShutdownEvent;
 import net.dv8tion.jda.api.exceptions.InvalidTokenException;
@@ -13,11 +14,13 @@ public class LeaderBot extends ListenerAdapter {
 
     private final long guildId;
     private final CommandHandler commandHandler;
+    private final ArchiveMessageHandler archiveMessageHandler;
 
     // Mantém o registo e o tratamento limitados ao servidor de teste.
     private LeaderBot(long guildId) {
-        this.guildId = guildId;
-        this.commandHandler = new CommandHandler(guildId);
+        this.guildId               = guildId;
+        this.commandHandler        = new CommandHandler(guildId);
+        this.archiveMessageHandler = new ArchiveMessageHandler(guildId);
     }
 
     // Ponto de entrada: carrega a configuração e inicia a ligação.
@@ -115,6 +118,12 @@ public class LeaderBot extends ListenerAdapter {
     @Override
     public void onSlashCommandInteraction(SlashCommandInteractionEvent event) {
         commandHandler.handle(event);
+    }
+
+    // Encaminha mensagens normais; os slash commands têm um evento próprio.
+    @Override
+    public void onMessageReceived(MessageReceivedEvent event) {
+        archiveMessageHandler.handle(event);
     }
 
     // Explica falhas de autenticação ou intents quando a sessão termina.

@@ -2,8 +2,8 @@
 
 Bot em Java 17+ e JDA. Regista nove comandos no servidor de teste: sete operações
 com validação e resposta provisória e dois comandos de ajuda. Ainda não executa operações de arquivo,
-não gera tokens de réplica e não produz rajadas reais. A deteção de mensagens
-normais em `#arquivo` ainda está por implementar.
+não gera tokens de réplica e não produz rajadas reais. Deteta mensagens normais
+em `#arquivo` e apresenta o autor e o texto na consola, como registo provisório.
 
 ## Configuração e arranque no IntelliJ
 
@@ -65,10 +65,31 @@ mensagens e comentários mantêm-se em português.
 - `LeaderBot`: configuração, ligação, publicação dos comandos e encaminhamento dos eventos.
 - `CommandDefinitions`: definições dos comandos, com um método por comando e uma lista em `createAll()`.
 - `CommandHandler`: permissões, validação e respostas provisórias.
+- `ArchiveMessageHandler`: seleção das mensagens de `#arquivo` e registo provisório na consola.
 
 `CommandDefinitions` descreve os nomes, as opções, os tipos e os limites aceites
 pelo Discord. Não envia pedidos nem executa comandos. O método
 `LeaderBot.registerCommands()` publica essas definições no servidor.
+
+## Mensagens no canal #arquivo
+
+O método `LeaderBot.onMessageReceived()` encaminha os eventos para
+`ArchiveMessageHandler`. Apenas mensagens de pessoas num canal de texto chamado
+exatamente `arquivo`, dentro de `DISCORD_GUILD_ID`, são registadas na consola.
+Bots (incluindo o próprio bot), webhooks, mensagens privadas, outros canais e
+threads são ignorados. Mantém um único canal de texto com esse nome no servidor.
+
+Exemplo ao enviar `Olá` em `#arquivo`:
+
+```text
+[#arquivo] Mensagem de Ana: Olá — processamento ainda não implementado.
+```
+
+Este registo confirma a receção; não há resposta automática no chat nem gravação
+no arquivo distribuído. Mensagens sem texto são assinaladas, mas os anexos não
+são processados. O bot recebe mensagens novas enquanto está ligado, sem consultar
+o histórico anterior. O Message Content Intent tem de estar ativo no Portal;
+os intents necessários já estão configurados no código.
 
 ## Adicionar um comando
 
@@ -92,5 +113,9 @@ pelo Discord. Não envia pedidos nem executa comandos. O método
   executado por um administrador, e que `/comandos-admin` inclui ambas as categorias.
 - Textos compostos apenas por espaços são recusados. Confirmações que ultrapassem
   2000 caracteres são enviadas num ficheiro de texto para preservar o conteúdo.
+- Envia uma mensagem normal em `#arquivo` e confirma o autor e o texto na consola.
+- Envia uma mensagem noutro canal e confirma que não aparece um registo de receção.
+- Confirma que mensagens de bots em `#arquivo` são ignoradas. Por exemplo, a
+  resposta provisória a `/estado` nesse canal não deve gerar um registo de receção.
 
 Para compilar num terminal que tenha Maven e JDK 17+ disponíveis: `mvn compile`.
