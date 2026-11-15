@@ -8,13 +8,20 @@ em `#arquivo` e apresenta o autor e o texto na consola, como registo provisório
 ## Configuração e arranque no IntelliJ
 
 1. Abre este projeto Maven e faz **Reload All Maven Projects**.
-2. Em **Run → Edit Configurations**, escolhe a configuração de `tpf.LeaderBot`.
-3. Em **Environment variables**, configura:
+2. Se ainda não existir uma configuração local, cria a pasta `.run` na raiz
+   deste projeto e copia `config/LeaderBot.run.xml.example` para
+   `.run/LeaderBot Config.run.xml`. Mantém o ficheiro original com os placeholders.
+3. Em **Run → Edit Configurations**, escolhe **LeaderBot Config**,
+   que executa `tpf.LeaderBot`.
+4. Em **Environment variables**, substitui os placeholders pelos teus valores:
    - `DISCORD_TOKEN`: token da secção **Bot** do Developer Portal.
    - `DISCORD_GUILD_ID`: ID do servidor de teste (não é o ID da aplicação nem do canal).
-4. Para copiar o ID, ativa **Definições do utilizador → Avançado → Modo de programador**
+5. Para copiar o ID, ativa **Definições do utilizador → Avançado → Modo de programador**
    no Discord e usa **Copiar ID do servidor** no menu de contexto do servidor.
-5. Mantém **Store as project file** desmarcado e executa `LeaderBot`.
+6. Guarda a configuração em `.run/LeaderBot Config.run.xml` e executa-a.
+   Essa pasta é local e está excluída do Git. Em alternativa, podes manter
+   **Store as project file** desmarcado; nesse caso o IntelliJ usa `.idea/`,
+   que também está excluída.
 
 O bot deve estar instalado nesse servidor com os scopes `bot` e
 `applications.commands`. Ativa **Message Content Intent** no Developer Portal.
@@ -24,8 +31,13 @@ O arranque deve mostrar `Bot online: ...` e, depois, `9 comandos registados em .
 Cada arranque sincroniza a lista completa de comandos desta aplicação nesse
 servidor; não cria comandos globais. Mantém apenas uma instância do programa em execução.
 
-O token nunca deve ser escrito no código ou enviado para o Git. `.idea/`, `.env`,
-`token.txt` e `master.key` estão excluídos. Java não carrega um `.env` automaticamente.
+O token nunca deve ser escrito no código ou enviado para o Git. `.run/`, `.idea/`,
+`.env`, `token.txt` e `master.key` estão excluídos. Java não carrega um `.env` automaticamente.
+
+O repositório guarda apenas `config/LeaderBot.run.xml.example`, com placeholders.
+Altera os valores na cópia local em `.run/`, nunca no modelo. O `.gitignore`
+não esconde alterações de ficheiros que já estão versionados; por isso a
+configuração real foi retirada do controlo do Git, mantendo-se no disco.
 
 ## Comandos e exemplos
 
