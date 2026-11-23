@@ -1,0 +1,10 @@
+{
+  "RaftCheck": {
+    "exit": 0,
+    "saida": "RAFT CHECK\np0 termo=1 candidatos=[2] votos=[n1->n2:concedido, n3->n2:concedido] lideres=[2] eleicao_ms=108\nARRANQUE;p0;primeiro_lider_ms=6358\nCOINCIDENCIA;p0;divergentes=[];tamanhos=[0, 0, 0];completa=true\nLEITURAS;p0;enviadas=0;perdidas=0\np1 termo=1 candidatos=[] votos=[] lideres=[]\np1 termo=2 candidatos=[1] votos=[n2->n1:concedido, n3->n1:concedido] lideres=[1] eleicao_ms=75\nARRANQUE;p1;primeiro_lider_ms=6494\nCOINCIDENCIA;p1;divergentes=[];tamanhos=[0, 0, 0];completa=true\nLEITURAS;p1;enviadas=0;perdidas=0\n1794051618585;TRUNCADO;p1;de=1;descartados=2;termos=1,1;registos=MTsxO1MwMjsyMC4xOzIwMjYtMTEtMDdUMTE6MDA6MDA7MTswLDEsMAoyOzE7UzA1OzIzLjc7MjAyNi0xMS0wN1QxMTowMDowMTsyOzAsMiww;noutro_seq=0\n1794051618582;TRUNCADO;p1;de=1;descartados=2;termos=1,1;registos=MTsxO1MwMjsyMC4xOzIwMjYtMTEtMDdUMTE6MDA6MDA7MTswLDEsMAoyOzE7UzA1OzIzLjc7MjAyNi0xMS0wN1QxMTowMDowMTsyOzAsMiww;noutro_seq=0\np2 termo=1 candidatos=[3] votos=[n1->n3:concedido, n2->n3:concedido] lideres=[3] eleicao_ms=58\nARRANQUE;p2;primeiro_lider_ms=7292\nCOINCIDENCIA;p2;divergentes=[];tamanhos=[0, 0, 0];completa=true\nLEITURAS;p2;enviadas=0;perdidas=0\nMONITOR;produtor;novos_lideres=0\nMONITOR;processador;novos_lideres=0\nRESUMO;termos_multiplos_lideres=0;termos_decrescentes=0;seq_divergentes=0;copias_incompletas=0;perdidas=0;truncados=4;noutro_seq=0\nLotes obsoletos aceites: 0\nRESULTADO: OK\n"
+  },
+  "CausalCheck": {
+    "exit": 0,
+    "saida": "CAUSAL CHECK\nRegistos canonicos: 0\nPares causais: 0\nPares concorrentes: 0\nConcorrentes com L distinto: 0\nViolacoes: 0\nRESULTADO: OK\n"
+  }
+}

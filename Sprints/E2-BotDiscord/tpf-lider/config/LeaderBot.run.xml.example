@@ -1,0 +1,13 @@
+<component name="ProjectRunConfigurationManager">
+  <configuration default="false" name="LeaderBot Config" type="Application" factoryName="Application">
+    <envs>
+      <env name="DISCORD_GUILD_ID" value="YOUR_DISCORD_GUILD_ID" />
+      <env name="DISCORD_TOKEN" value="YOUR_DISCORD_BOT_TOKEN" />
+    </envs>
+    <option name="MAIN_CLASS_NAME" value="tpf.LeaderBot" />
+    <module name="tpf-lider" />
+    <method v="2">
+      <option name="Make" enabled="true" />
+    </method>
+  </configuration>
+</component>

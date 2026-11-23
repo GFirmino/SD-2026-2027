@@ -1,0 +1,13 @@
+build/
+*.class
+*.log
+no-*.txt
+estado-*.txt*
+hb-*.txt
+eventos-*.txt
+monitor-*.txt
+produtor.txt
+isolar-p*-n*
+falhas.txt
+*-check.txt
+vista-lamport.txt
