@@ -1,0 +1,631 @@
+<!doctype html>
+<html lang="pt-PT">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>BotDiscord · Diagrama de Classes</title>
+  <style>
+    :root {
+      --paper: #f4f6f8; --ink: #173042; --muted: #5b6e7a; --line: #ccd7dd;
+      --blue: #24658b; --green: #18745d; --amber: #a35e0a;
+      --app: #e5f2f8; --commands: #eaf5ee; --messages: #fff1dc; --definitions: #eeeafb;
+    }
+    * { box-sizing: border-box; }
+    body { margin: 0; background: var(--paper); color: var(--ink); font: 15px/1.5 "Segoe UI", Arial, sans-serif; }
+    header { background: #fff; border-bottom: 1px solid var(--line); padding: 26px 32px 20px; }
+    header small { color: var(--green); font-weight: 700; letter-spacing: .12em; text-transform: uppercase; }
+    h1 { font-size: 30px; line-height: 1.2; margin: 7px 0; }
+    header p { max-width: 1080px; margin: 0; color: var(--muted); }
+    nav { display: flex; gap: 8px; flex-wrap: wrap; padding: 18px 32px 0; align-items: center; }
+    [role="tablist"] { display: flex; gap: 8px; flex-wrap: wrap; }
+    button { font: inherit; border: 1px solid #b8c7cf; background: #fff; color: var(--ink); padding: 8px 13px; border-radius: 7px; cursor: pointer; }
+    button:hover { border-color: var(--blue); }
+    button[aria-selected="true"] { background: var(--blue); border-color: var(--blue); color: #fff; }
+    :focus-visible { outline: 3px solid #3589b8; outline-offset: 3px; }
+    a { color: var(--blue); text-underline-offset: 3px; }
+    code { font-family: Consolas, monospace; background: #edf2f5; padding: 1px 4px; border-radius: 3px; overflow-wrap: anywhere; }
+    .page { padding: 18px 32px 30px; }
+    .view { display: none; }
+    .view.active { display: block; }
+    .panel { background: #fff; border: 1px solid var(--line); border-radius: 12px; padding: 20px; box-shadow: 0 2px 9px #1730420a; }
+    .section-title { display: flex; align-items: baseline; flex-wrap: wrap; gap: 8px 12px; border-bottom: 1px solid var(--line); margin: 0 0 18px; padding-bottom: 10px; }
+    .section-title h2 { margin: 0; font-size: 20px; }
+    .section-title span, .intro { color: var(--muted); }
+    .section-title span { font-size: 13px; }
+    .intro { margin: 0 0 16px; }
+    .scroll { overflow-x: auto; }
+    .overview { min-width: 1010px; display: grid; grid-template-columns: 220px 65px 260px 65px minmax(300px, 1fr); gap: 12px; align-items: stretch; }
+    .lane { border: 1px dashed #b9c8cf; border-radius: 12px; padding: 13px; background: #f8fafb; }
+    .lane h3 { font-size: 12px; text-transform: uppercase; letter-spacing: .08em; margin: 0 0 12px; }
+    .lane.application { background: #f2f9fc; }
+    .arrow { align-self: center; font-size: 12px; text-align: center; color: var(--muted); }
+    .arrow b { display: block; font-size: 28px; color: var(--blue); line-height: 1.4; }
+    .card { border: 1px solid #aebfc8; border-radius: 8px; background: #fff; margin: 10px 0 0; overflow: hidden; }
+    .card h4 { font-size: 15px; margin: 0; padding: 10px 12px; background: var(--app); border-bottom: 1px solid #c8d9e0; }
+    .card.commands h4, .uml.commands .head { background: var(--commands); }
+    .card.messages h4, .uml.messages .head { background: var(--messages); }
+    .card.definitions h4, .uml.definitions .head { background: var(--definitions); }
+    .card.external h4 { background: #edf1f4; }
+    .card p, .card ul { font-size: 13px; margin: 10px 12px; }
+    .card ul { padding-left: 18px; }
+    .card code { font-size: 11px; }
+    .callout { margin-top: 16px; padding: 13px 16px; background: #fff7e8; border-left: 4px solid var(--amber); font-size: 13px; }
+    .legend { display: flex; gap: 8px 20px; flex-wrap: wrap; margin: 14px 0 0; color: var(--muted); font-size: 12px; }
+    .legend b { color: var(--ink); }
+    .packages { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 18px; align-items: start; }
+    .uml { border: 1px solid #9eafb9; background: #fff; min-width: 0; break-inside: avoid; }
+    .uml .head { padding: 10px 12px; background: var(--app); border-bottom: 1px solid #b8c8d0; text-align: center; }
+    .uml h3 { margin: 0; font-size: 17px; }
+    .uml .head small { color: var(--muted); }
+    .members { font: 12px/1.65 Consolas, monospace; padding: 10px 13px; border-bottom: 1px solid #dbe2e6; overflow-wrap: anywhere; }
+    .members h4 { font: 600 11px "Segoe UI", Arial, sans-serif; letter-spacing: .06em; text-transform: uppercase; color: var(--muted); margin: 0 0 6px; }
+    .signature { display: block; margin: 2px 0; }
+    .static { text-decoration: underline; text-underline-offset: 3px; }
+    .class-note { margin: 0; padding: 12px 13px; color: var(--muted); font-size: 13px; }
+    .source { display: block; margin-top: 6px; font-size: 12px; }
+    .rel { margin-top: 16px; border: 1px solid var(--line); border-radius: 9px; overflow-x: auto; }
+    .rel table { width: 100%; border-collapse: collapse; }
+    .rel th, .rel td { padding: 10px 12px; border-bottom: 1px solid #e2e7ea; text-align: left; font-size: 13px; vertical-align: top; }
+    .rel th { background: #f0f4f6; font-weight: 600; }
+    .rel tr:last-child td { border-bottom: 0; }
+    .rel code { font-size: 12px; }
+    .steps { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 14px; }
+    .step { border: 1px solid var(--line); border-radius: 9px; padding: 15px; background: #fafcfd; }
+    .step h3 { font-size: 15px; margin: 0 0 10px; }
+    .step ol { font-size: 13px; margin: 0; padding-left: 19px; }
+    .step li + li { margin-top: 8px; }
+    .badge { display: inline-block; font-size: 11px; font-weight: 600; border-radius: 4px; padding: 2px 7px; background: var(--commands); color: #195640; white-space: nowrap; }
+    .badge.admin { background: var(--messages); color: #75470c; }
+    .subheading { font-size: 18px; margin: 24px 0 8px; }
+    .zoom-toolbar { display: flex; align-items: center; gap: 7px; margin: 0 0 9px; flex-wrap: wrap; }
+    .zoom-toolbar button { padding: 5px 11px; font-weight: 700; }
+    .zoom-value { min-width: 48px; text-align: center; color: var(--muted); font-size: 12px; }
+    .zoom-help { margin-left: auto; color: var(--muted); font-size: 12px; }
+    .diagram-stage { height: 740px; overflow: hidden; border: 1px solid var(--line); border-radius: 9px; background: #f8fafb; cursor: grab; touch-action: none; }
+    .diagram-stage.dragging { cursor: grabbing; }
+    .drawio { display: block; width: 100%; height: 100%; background: #fafafa; user-select: none; }
+    .drawio text { font-family: "Segoe UI", Arial, sans-serif; fill: var(--ink); pointer-events: none; }
+    .drawio .title { font-size: 18px; font-weight: 700; }
+    .drawio .stereo { font-size: 12px; fill: #637682; }
+    .drawio .member { font: 13px Consolas, monospace; }
+    .drawio .group-title { font-size: 14px; font-weight: 700; letter-spacing: .06em; }
+    .drawio .box { fill: #fff; stroke: #78909c; stroke-width: 1.4; }
+    .drawio .head-app { fill: var(--app); }
+    .drawio .head-commands { fill: var(--commands); }
+    .drawio .head-messages { fill: var(--messages); }
+    .drawio .head-definitions { fill: var(--definitions); }
+    .drawio .divider { stroke: #9fb0b9; }
+    .drawio .inherit { fill: none; stroke: #326d91; stroke-width: 2; marker-end: url(#triangle); }
+    .drawio .depend { fill: none; stroke: #6c7d87; stroke-width: 1.8; stroke-dasharray: 8 5; marker-end: url(#open-arrow); }
+    .drawio .compose { fill: none; stroke: #18745d; stroke-width: 2; marker-start: url(#diamond); }
+    .drawio .rel-label { font-size: 13px; font-weight: 600; fill: #536874; paint-order: stroke; stroke: #fafafa; stroke-width: 5px; stroke-linejoin: round; }
+    .drawio .multiplicity { font-size: 13px; fill: #18745d; font-weight: 700; }
+    .diagram-legend { display: flex; gap: 10px 24px; flex-wrap: wrap; margin: 15px 0 0; font-size: 12px; color: var(--muted); }
+    .diagram-legend span { display: inline-flex; align-items: center; gap: 8px; }
+    .diagram-legend svg { width: 52px; height: 18px; }
+    .foot { margin: 0 32px 30px; padding: 18px; background: #fff; border: 1px solid var(--line); border-radius: 10px; }
+    .foot h2 { font-size: 16px; margin: 0 0 9px; }
+    .foot p { font-size: 13px; color: var(--muted); margin: 7px 0; }
+    @media (max-width: 900px) {
+      header, nav, .page { padding-left: 16px; padding-right: 16px; }
+      h1 { font-size: 26px; }
+      .packages, .steps { grid-template-columns: 1fr; }
+      .foot { margin: 0 16px 20px; }
+      .diagram-stage { height: 560px; }
+      .zoom-help { width: 100%; margin: 0; }
+      .rel table { min-width: 700px; }
+    }
+    @media print {
+      @page { size: A4 landscape; margin: 12mm; }
+      body { background: #fff; font-size: 12px; print-color-adjust: exact; -webkit-print-color-adjust: exact; }
+      header { padding: 0 0 12px; }
+      header h1 { font-size: 24px; }
+      nav, .zoom-toolbar, .source { display: none; }
+      .view { display: block !important; break-before: page; }
+      .view:first-child { break-before: auto; }
+      .page { padding: 12px 0 0; }
+      .panel { box-shadow: none; padding: 12px; }
+      .scroll, .rel { overflow: visible; }
+      .overview { min-width: 0; grid-template-columns: 1fr 40px 1.1fr 40px 1.3fr; gap: 7px; }
+      .lane { padding: 9px; }
+      .card h4 { font-size: 13px; }
+      .card p, .card ul { font-size: 11px; }
+      .packages { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 14px; }
+      .members { font-size: 10px; line-height: 1.5; }
+      .steps { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+      .step ol, .rel td, .rel th { font-size: 11px; }
+      .rel td, .rel th { padding: 6px 8px; }
+      .rel table { min-width: 0; }
+      tr { break-inside: avoid; }
+      #eventos .section-title { margin-bottom: 12px; padding-bottom: 8px; }
+      #eventos .step { padding: 10px; }
+      #eventos .step h3 { font-size: 13px; margin-bottom: 8px; }
+      #eventos .step ol { line-height: 1.4; }
+      #eventos .step li + li { margin-top: 4px; }
+      #eventos .subheading { font-size: 16px; margin-top: 16px; }
+      #eventos .intro { margin-bottom: 10px; }
+      #eventos .rel { margin-top: 10px; }
+      #eventos .rel td, #eventos .rel th { padding: 4px 8px; line-height: 1.35; }
+      #eventos .rel code { font-size: 11px; }
+      #eventos .callout { margin-top: 10px; padding: 9px 12px; font-size: 11px; }
+      .diagram-stage { height: 151mm; border: 0; overflow: visible; }
+      .foot { margin: 14px 0 0; break-inside: avoid; }
+    }
+  </style>
+  <noscript><style>.view { display: block; margin-bottom: 20px; } nav, .zoom-toolbar { display: none; }</style></noscript>
+</head>
+<body>
+  <header>
+    <small>Sistemas Distribuídos · Épico 2 · BotDiscord</small>
+    <h1>Diagrama de classes do bot do Discord</h1>
+    <p>Estrutura atual do projeto <code>tpf-lider</code>: quatro classes no pacote <code>tpf</code>, organizadas por responsabilidade. As vistas mostram o arranque, os eventos, os comandos e as relações UML.</p>
+  </header>
+
+  <nav aria-label="Vistas do diagrama">
+    <div role="tablist" aria-label="Conteúdo">
+      <button type="button" id="tab-geral" role="tab" data-view="geral" aria-controls="geral" aria-selected="true">1 · Visão geral</button>
+      <button type="button" id="tab-classes" role="tab" data-view="classes" aria-controls="classes" aria-selected="false" tabindex="-1">2 · Classes</button>
+      <button type="button" id="tab-eventos" role="tab" data-view="eventos" aria-controls="eventos" aria-selected="false" tabindex="-1">3 · Eventos e comandos</button>
+      <button type="button" id="tab-ligacoes" role="tab" data-view="ligacoes" aria-controls="ligacoes" aria-selected="false" tabindex="-1">4 · Ligações UML</button>
+    </div>
+    <button type="button" id="print">Imprimir</button>
+  </nav>
+
+  <main class="page">
+    <!-- Esta vista resume o fluxo; as relações estruturais estão na vista UML. -->
+    <section class="view active" id="geral" role="tabpanel" aria-labelledby="tab-geral" tabindex="0">
+      <div class="panel">
+        <div class="section-title"><h2>Uma aplicação, quatro responsabilidades</h2><span>Discord → JDA → LeaderBot → handler</span></div>
+        <p class="intro">Lê da esquerda para a direita. A JDA recebe os eventos do Discord e chama os métodos de <code>LeaderBot</code>. Cada handler trata um tipo de entrada.</p>
+        <div class="scroll">
+          <div class="overview">
+            <div class="lane">
+              <h3>Discord + biblioteca JDA</h3>
+              <div class="card external"><h4>Servidor de teste</h4><p>Os membros enviam slash commands e mensagens no canal <code>#arquivo</code>.</p></div>
+              <div class="card external"><h4>JDABuilder</h4><p>Cria a ligação ao Discord e regista a instância de <code>LeaderBot</code> como listener.</p></div>
+              <div class="card external"><h4>ListenerAdapter</h4><p>Classe da JDA que fornece os callbacks de eventos que o bot sobrescreve.</p></div>
+            </div>
+            <div class="arrow">eventos<b aria-hidden="true">→</b>callbacks</div>
+            <div class="lane application">
+              <h3>Arranque e encaminhamento</h3>
+              <div class="card"><h4>LeaderBot</h4><ul><li>Lê a configuração de ambiente.</li><li>Inicia a ligação com a JDA.</li><li>Cria e guarda os dois handlers.</li><li>Regista os comandos no servidor quando fica pronto.</li><li>Encaminha os eventos recebidos.</li></ul></div>
+              <div class="card definitions"><h4>CommandDefinitions</h4><p>Constrói a lista dos nove comandos: nomes, descrições, opções, tipos e mínimos.</p><p><code>LeaderBot</code> usa a lista no registo; <code>CommandHandler</code> usa-a na ajuda.</p></div>
+            </div>
+            <div class="arrow">delega<b aria-hidden="true">→</b><code>handle()</code></div>
+            <div class="lane application">
+              <h3>Tratamento das entradas</h3>
+              <div class="card commands"><h4>CommandHandler</h4><ul><li>Confirma o servidor e o papel exigido.</li><li>Lê e valida os argumentos.</li><li>Responde com o pedido recebido.</li><li>Gera a ajuda normal e administrativa.</li></ul></div>
+              <div class="card messages"><h4>ArchiveMessageHandler</h4><ul><li>Aceita mensagens de pessoas no canal de texto <code>#arquivo</code> do servidor configurado.</li><li>Ignora bots, webhooks e outras origens.</li><li>Escreve autor e conteúdo na consola.</li></ul></div>
+            </div>
+          </div>
+        </div>
+        <div class="legend"><span><b>Processo:</b> uma aplicação Java</span><span><b>Pacote:</b> tpf</span><span><b>Comandos:</b> 7 da ficha + 2 de ajuda</span><span><b>Biblioteca externa:</b> JDA</span></div>
+        <div class="callout"><b>Estado atual:</b> os sete comandos da ficha devolvem respostas provisórias; os dois comandos de ajuda já apresentam descrições. As mensagens de <code>#arquivo</code> são registadas na consola. O arquivo, a cifra, a replicação, a recuperação e a geração de rajadas ainda não estão implementados.</div>
+      </div>
+    </section>
+
+    <!-- Os membros seguem os nomes e a visibilidade das quatro classes Java. -->
+    <section class="view" id="classes" role="tabpanel" aria-labelledby="tab-classes" tabindex="0">
+      <div class="panel">
+        <div class="section-title"><h2>Classes do pacote tpf</h2><span>atributos, construtores e métodos</span></div>
+        <p class="intro"><b>+</b> público · <b>−</b> privado · <span class="static">sublinhado</span> = <code>static</code> · <code>{final}</code> = campo que não pode ser reatribuído. Os tipos sem pacote são os usados nos imports do código.</p>
+        <div class="packages">
+          <article class="uml">
+            <div class="head"><h3>LeaderBot</h3><small>extends ListenerAdapter · arranque e eventos</small></div>
+            <div class="members"><h4>Atributos</h4>
+              <span class="signature">- guildId: long {final}</span>
+              <span class="signature">- commandHandler: CommandHandler {final}</span>
+              <span class="signature">- archiveMessageHandler: ArchiveMessageHandler {final}</span>
+            </div>
+            <div class="members"><h4>Construtor e interface pública</h4>
+              <span class="signature">- LeaderBot(guildId: long)</span>
+              <span class="signature static">+ main(args: String[]): void</span>
+              <span class="signature">+ onReady(event: ReadyEvent): void</span>
+              <span class="signature">+ onSlashCommandInteraction(event: SlashCommandInteractionEvent): void</span>
+              <span class="signature">+ onMessageReceived(event: MessageReceivedEvent): void</span>
+              <span class="signature">+ onShutdown(event: ShutdownEvent): void</span>
+            </div>
+            <div class="members"><h4>Métodos auxiliares</h4>
+              <span class="signature static">- readRequiredEnv(name: String): String</span>
+              <span class="signature static">- readGuildId(): long</span>
+              <span class="signature static">- startConnection(token: String, guildId: long): void</span>
+              <span class="signature">- registerCommands(guild: Guild): void</span>
+            </div>
+            <p class="class-note">O construtor cria um <code>CommandHandler</code> e um <code>ArchiveMessageHandler</code>, ambos com o mesmo <code>guildId</code>. Os callbacks encaminham os eventos para esses objetos.<a class="source" href="tpf-lider/src/main/java/tpf/LeaderBot.java">Ver LeaderBot.java</a></p>
+          </article>
+
+          <article class="uml definitions">
+            <div class="head"><h3>CommandDefinitions</h3><small>final · utilitário de definições</small></div>
+            <div class="members"><h4>Atributos</h4>Sem atributos.</div>
+            <div class="members"><h4>Construtor e interface pública</h4>
+              <span class="signature">- CommandDefinitions()</span>
+              <span class="signature static">+ createAll(): List&lt;CommandData&gt;</span>
+            </div>
+            <div class="members"><h4>Métodos auxiliares — todos static</h4>
+              <span class="signature static">- createRegisterCommand(): SlashCommandData</span>
+              <span class="signature static">- createStatusCommand(): SlashCommandData</span>
+              <span class="signature static">- createConfigCommand(): SlashCommandData</span>
+              <span class="signature static">- createRecoverCommand(): SlashCommandData</span>
+              <span class="signature static">- createReplicaTokenCommand(): SlashCommandData</span>
+              <span class="signature static">- createRemoveReplicaCommand(): SlashCommandData</span>
+              <span class="signature static">- createBurstCommand(): SlashCommandData</span>
+              <span class="signature static">- createLeaderHelpCommand(): SlashCommandData</span>
+              <span class="signature static">- createAdminHelpCommand(): SlashCommandData</span>
+              <span class="signature static">- requiredInteger(name: String, description: String, minimum: long): OptionData</span>
+            </div>
+            <p class="class-note">Fornece os dados que descrevem os comandos. O registo no Discord é feito por <code>LeaderBot</code>; a execução e a verificação do papel são feitas por <code>CommandHandler</code>.<a class="source" href="tpf-lider/src/main/java/tpf/CommandDefinitions.java">Ver CommandDefinitions.java</a></p>
+          </article>
+
+          <article class="uml messages">
+            <div class="head"><h3>ArchiveMessageHandler</h3><small>filtragem e leitura do canal #arquivo</small></div>
+            <div class="members"><h4>Atributos</h4>
+              <span class="signature static">- ARCHIVE_CHANNEL_NAME: String = "arquivo" {final}</span>
+              <span class="signature">- guildId: long {final}</span>
+            </div>
+            <div class="members"><h4>Construtor e interface pública</h4>
+              <span class="signature">+ ArchiveMessageHandler(guildId: long)</span>
+              <span class="signature">+ handle(event: MessageReceivedEvent): void</span>
+            </div>
+            <div class="members"><h4>Métodos auxiliares</h4>
+              <span class="signature">- isArchiveMessage(event: MessageReceivedEvent): boolean</span>
+              <span class="signature">- logReceivedMessage(event: MessageReceivedEvent): void</span>
+            </div>
+            <p class="class-note">Filtra pelo servidor, pelo tipo de canal <code>TEXT</code> e pelo nome exato <code>arquivo</code>. Escreve na consola; mensagens sem texto são identificadas como tal.<a class="source" href="tpf-lider/src/main/java/tpf/ArchiveMessageHandler.java">Ver ArchiveMessageHandler.java</a></p>
+          </article>
+
+          <article class="uml commands">
+            <div class="head"><h3>CommandHandler</h3><small>autorização, validação, respostas e ajuda</small></div>
+            <div class="members"><h4>Atributos</h4>
+              <span class="signature static">- ADMIN_ROLE_NAME: String = "admin-arquivo" {final}</span>
+              <span class="signature static">- ADMIN_COMMANDS: Set&lt;String&gt; {final}</span>
+              <span class="signature static">- HELP_COMMANDS: Set&lt;String&gt; {final}</span>
+              <span class="signature">- guildId: long {final}</span>
+            </div>
+            <div class="members"><h4>Construtor e interface pública</h4>
+              <span class="signature">+ CommandHandler(guildId: long)</span>
+              <span class="signature">+ handle(event: SlashCommandInteractionEvent): void</span>
+            </div>
+            <div class="members"><h4>Métodos auxiliares</h4>
+              <span class="signature">- hasAdminRole(event: SlashCommandInteractionEvent): boolean</span>
+              <span class="signature">- buildReply(event: SlashCommandInteractionEvent): String</span>
+              <span class="signature">- buildHelp(includeAdmin: boolean): String</span>
+              <span class="signature">- appendHelpEntry(section: StringBuilder, name: String, options: List&lt;OptionData&gt;, description: String): void</span>
+              <span class="signature">- handleConfig(event: SlashCommandInteractionEvent): String</span>
+              <span class="signature">- handleRecovery(event: SlashCommandInteractionEvent): String</span>
+              <span class="signature">- handleBurst(event: SlashCommandInteractionEvent): String</span>
+              <span class="signature">- readOption(event: SlashCommandInteractionEvent, name: String, type: OptionType): OptionMapping</span>
+              <span class="signature">- readText(event: SlashCommandInteractionEvent, name: String): String</span>
+              <span class="signature">- readInteger(event: SlashCommandInteractionEvent, name: String, minimum: long): long</span>
+              <span class="signature">- reply(event: SlashCommandInteractionEvent, message: String, ephemeral: boolean): void</span>
+            </div>
+            <p class="class-note">Usa <code>CommandDefinitions.createAll()</code> para gerar a ajuda. As respostas de ajuda e de erro são efémeras: só o utilizador que executou o comando as vê.<a class="source" href="tpf-lider/src/main/java/tpf/CommandHandler.java">Ver CommandHandler.java</a></p>
+          </article>
+        </div>
+        <div class="callout"><b>Configuração e infraestrutura:</b> <code>DISCORD_TOKEN</code> e <code>DISCORD_GUILD_ID</code> são variáveis de ambiente lidas no arranque. A JDA fornece <code>JDABuilder</code>, <code>Guild</code>, os tipos de eventos e os objetos das definições. O token é usado como variável local/parâmetro, não como atributo de <code>LeaderBot</code>.</div>
+      </div>
+    </section>
+
+    <section class="view" id="eventos" role="tabpanel" aria-labelledby="tab-eventos" tabindex="0">
+      <div class="panel">
+        <div class="section-title"><h2>Do evento à resposta</h2><span>como as classes colaboram</span></div>
+        <div class="steps">
+          <article class="step"><h3>1 · Arranque e registo</h3><ol>
+            <li><code>main()</code> lê o token e o ID do servidor.</li>
+            <li><code>startConnection()</code> configura a JDA com <code>GUILD_MESSAGES</code> e <code>MESSAGE_CONTENT</code> e adiciona <code>new LeaderBot(guildId)</code>.</li>
+            <li><code>onReady()</code> procura o servidor e chama <code>registerCommands()</code>.</li>
+            <li><code>CommandDefinitions.createAll()</code> fornece os comandos para <code>guild.updateCommands()</code>.</li>
+          </ol></article>
+          <article class="step"><h3>2 · Slash command</h3><ol>
+            <li>A JDA chama <code>onSlashCommandInteraction()</code>.</li>
+            <li><code>CommandHandler.handle()</code> verifica o servidor e, se necessário, o papel <code>admin-arquivo</code>.</li>
+            <li><code>buildReply()</code> identifica o comando e valida os argumentos; para ajuda, usa <code>buildHelp()</code>.</li>
+            <li><code>reply()</code> envia a resposta ou o erro. Pedidos extensos seguem em anexo.</li>
+          </ol></article>
+          <article class="step"><h3>3 · Mensagem no canal</h3><ol>
+            <li>A JDA chama <code>onMessageReceived()</code>.</li>
+            <li><code>ArchiveMessageHandler.handle()</code> chama <code>isArchiveMessage()</code>.</li>
+            <li>Aceita pessoas no canal de texto chamado <code>arquivo</code> do servidor configurado.</li>
+            <li><code>logReceivedMessage()</code> escreve autor e conteúdo na consola, com indicação de processamento provisório.</li>
+          </ol></article>
+        </div>
+
+        <h3 class="subheading">Comandos definidos no código</h3>
+        <p class="intro">Os tipos e mínimos estão em <code>CommandDefinitions</code>. As regras de execução e a validação do intervalo estão em <code>CommandHandler</code>.</p>
+        <div class="rel"><table>
+          <thead><tr><th scope="col">Comando</th><th scope="col">Argumentos / validação</th><th scope="col">Acesso</th><th scope="col">Comportamento atual</th></tr></thead>
+          <tbody>
+            <tr><td><code>/registar &lt;texto&gt;</code></td><td>Texto obrigatório e não vazio.</td><td><span class="badge">Normal</span></td><td>Eco do texto recebido.</td></tr>
+            <tr><td><code>/estado</code></td><td>Sem argumentos.</td><td><span class="badge">Normal</span></td><td>Confirmação provisória do pedido.</td></tr>
+            <tr><td><code>/recuperar &lt;de&gt; &lt;ate&gt;</code></td><td>Inteiros ≥ 0; <code>de ≤ ate</code>.</td><td><span class="badge">Normal</span></td><td>Eco dos extremos do intervalo.</td></tr>
+            <tr><td><code>/comandos-lider</code></td><td>Sem argumentos.</td><td><span class="badge">Normal</span></td><td>Ajuda dos quatro comandos normais.</td></tr>
+            <tr><td><code>/config r &lt;n&gt;</code></td><td><code>r</code> é um subcomando; <code>n</code> é inteiro ≥ 1.</td><td><span class="badge admin">admin-arquivo</span></td><td>Eco do fator pedido.</td></tr>
+            <tr><td><code>/replica-token</code></td><td>Sem argumentos.</td><td><span class="badge admin">admin-arquivo</span></td><td>Confirmação provisória do pedido.</td></tr>
+            <tr><td><code>/replica-remover &lt;id&gt;</code></td><td>Identificador textual obrigatório e não vazio.</td><td><span class="badge admin">admin-arquivo</span></td><td>Eco do identificador recebido.</td></tr>
+            <tr><td><code>/rajada &lt;n&gt; &lt;intervaloms&gt;</code></td><td><code>n</code> inteiro ≥ 1; <code>intervaloms</code> inteiro ≥ 0.</td><td><span class="badge admin">admin-arquivo</span></td><td>Eco da quantidade e do intervalo.</td></tr>
+            <tr><td><code>/comandos-admin</code></td><td>Sem argumentos.</td><td><span class="badge admin">admin-arquivo</span></td><td>Ajuda dos nove comandos, normais e administrativos.</td></tr>
+          </tbody>
+        </table></div>
+        <div class="callout"><b>Dois filtros diferentes:</b> os slash commands são limitados ao servidor configurado e aos papéis exigidos; a leitura de mensagens exige também o canal <code>#arquivo</code>. O papel é verificado pelo nome exato <code>admin-arquivo</code> no handler.</div>
+      </div>
+    </section>
+
+    <!-- As ligações representam herança, composição e dependência entre classes. -->
+    <section class="view" id="ligacoes" role="tabpanel" aria-labelledby="tab-ligacoes" tabindex="0">
+      <div class="panel">
+        <div class="section-title"><h2>Ligações UML</h2><span>quatro classes próprias + a superclasse da JDA</span></div>
+        <p class="intro">Vista resumida dos membros. O separador <b>Classes</b> contém todas as assinaturas. O losango fica junto de <code>LeaderBot</code>, que cria e guarda os handlers.</p>
+        <div class="zoom-toolbar">
+          <button type="button" id="zoom-out" aria-label="Reduzir diagrama">−</button>
+          <button type="button" id="zoom-reset">Repor</button>
+          <button type="button" id="zoom-in" aria-label="Ampliar diagrama">+</button>
+          <output class="zoom-value" id="zoom-value" aria-label="Nível de zoom">100%</output>
+          <span class="zoom-help" id="zoom-help">Roda: zoom · Arrastar: mover · Duplo clique: repor · Teclado: + / −, setas e 0</span>
+        </div>
+        <div class="diagram-stage" id="diagram-stage" tabindex="0" role="region" aria-label="Diagrama de classes com zoom" aria-describedby="zoom-help">
+          <svg class="drawio" id="class-diagram" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 980" role="img" aria-labelledby="diagram-title diagram-description">
+            <title id="diagram-title">Diagrama de classes de tpf-lider</title>
+            <desc id="diagram-description">LeaderBot herda de ListenerAdapter da JDA, contém um ArchiveMessageHandler e um CommandHandler, e depende de CommandDefinitions para registar comandos. CommandHandler também depende de CommandDefinitions para gerar a ajuda. As quatro classes próprias pertencem ao pacote tpf.</desc>
+            <defs>
+              <marker id="triangle" markerWidth="16" markerHeight="16" refX="14" refY="8" orient="auto" markerUnits="userSpaceOnUse"><path d="M1 1L14 8L1 15Z" fill="#fafafa" stroke="#326d91" stroke-width="1.8"/></marker>
+              <marker id="open-arrow" markerWidth="12" markerHeight="12" refX="11" refY="6" orient="auto" markerUnits="userSpaceOnUse"><path d="M1 1L11 6L1 11" fill="none" stroke="#6c7d87" stroke-width="1.8"/></marker>
+              <marker id="diamond" markerWidth="23" markerHeight="15" refX="0" refY="7.5" orient="auto" markerUnits="userSpaceOnUse"><path d="M0 7.5L11 1L22 7.5L11 14Z" fill="#18745d"/></marker>
+            </defs>
+
+            <rect x="40" y="180" width="1360" height="770" rx="12" fill="#f8fafb" stroke="#c4d0d7" stroke-dasharray="7 5"/>
+            <text x="60" y="206" class="group-title">PACOTE tpf</text>
+            <text x="880" y="92" class="group-title">BIBLIOTECA EXTERNA: JDA</text>
+            <text x="880" y="117" class="stereo">ListenerAdapter fornece os callbacks de eventos.</text>
+
+            <!-- Herança: o triângulo aponta para a superclasse. -->
+            <path class="inherit" d="M350 230V140"/>
+            <text x="365" y="166" class="rel-label">extends</text>
+            <!-- Dependência de registo: só usa as definições durante a chamada. -->
+            <path class="depend" d="M610 320H880"/>
+            <text x="745" y="285" text-anchor="middle" class="rel-label">regista comandos</text>
+            <text x="745" y="305" text-anchor="middle" class="rel-label">createAll()</text>
+            <!-- Composição: um handler de cada tipo pertence a esta instância do bot. -->
+            <path class="compose" d="M240 510V650"/>
+            <text x="255" y="536" class="multiplicity">1</text>
+            <text x="255" y="637" class="multiplicity">1</text>
+            <text x="260" y="582" class="rel-label">archiveMessageHandler</text>
+            <path class="compose" d="M540 510V560H1100V650"/>
+            <text x="555" y="536" class="multiplicity">1</text>
+            <text x="1115" y="637" class="multiplicity">1</text>
+            <text x="735" y="550" class="rel-label">commandHandler</text>
+            <!-- A ajuda reutiliza as mesmas definições que o registo. -->
+            <path class="depend" d="M1280 650V510"/>
+            <text x="1263" y="588" text-anchor="end" class="rel-label">gera ajuda</text>
+            <text x="1263" y="608" text-anchor="end" class="rel-label">createAll()</text>
+
+            <g transform="translate(90 35)">
+              <rect class="box" width="520" height="105"/>
+              <rect width="520" height="57" fill="#edf1f4"/>
+              <line class="divider" y1="57" x2="520" y2="57"/>
+              <text x="260" y="22" text-anchor="middle" class="stereo">JDA · net.dv8tion.jda.api.hooks</text>
+              <text x="260" y="45" text-anchor="middle" class="title">ListenerAdapter</text>
+              <text x="16" y="84" class="member">Callbacks de eventos sobrescritos por LeaderBot</text>
+            </g>
+
+            <g transform="translate(90 230)">
+              <rect class="box" width="520" height="280"/>
+              <rect class="head-app" width="520" height="55"/>
+              <line class="divider" y1="55" x2="520" y2="55"/>
+              <text x="260" y="20" text-anchor="middle" class="stereo">arranque e encaminhamento</text>
+              <text x="260" y="43" text-anchor="middle" class="title">LeaderBot</text>
+              <text x="16" y="80" class="member">- guildId: long {final}</text>
+              <text x="16" y="102" class="member">- commandHandler: CommandHandler {final}</text>
+              <text x="16" y="124" class="member">- archiveMessageHandler: ArchiveMessageHandler {final}</text>
+              <line class="divider" y1="140" x2="520" y2="140"/>
+              <text x="16" y="164" class="member static">+ main(args: String[]): void</text>
+              <text x="16" y="186" class="member">+ onReady(event): void</text>
+              <text x="16" y="208" class="member">+ onSlashCommandInteraction(event): void</text>
+              <text x="16" y="230" class="member">+ onMessageReceived(event): void</text>
+              <text x="16" y="252" class="member">- registerCommands(guild: Guild): void</text>
+            </g>
+
+            <g transform="translate(880 230)">
+              <rect class="box" width="470" height="280"/>
+              <rect class="head-definitions" width="470" height="55"/>
+              <line class="divider" y1="55" x2="470" y2="55"/>
+              <text x="235" y="20" text-anchor="middle" class="stereo">utilitário · final</text>
+              <text x="235" y="43" text-anchor="middle" class="title">CommandDefinitions</text>
+              <text x="16" y="84" class="stereo">Sem atributos; métodos de definição static.</text>
+              <line class="divider" y1="101" x2="470" y2="101"/>
+              <text x="16" y="128" class="member">- CommandDefinitions()</text>
+              <text x="16" y="154" class="member static">+ createAll(): List&lt;CommandData&gt;</text>
+              <text x="16" y="180" class="member static">- createConfigCommand(): SlashCommandData</text>
+              <text x="16" y="206" class="member static">- requiredInteger(name, description, minimum)</text>
+              <text x="16" y="246" class="stereo">Nove métodos create…Command(), um por comando.</text>
+            </g>
+
+            <g transform="translate(90 650)">
+              <rect class="box" width="520" height="240"/>
+              <rect class="head-messages" width="520" height="55"/>
+              <line class="divider" y1="55" x2="520" y2="55"/>
+              <text x="260" y="20" text-anchor="middle" class="stereo">mensagens de pessoas em #arquivo</text>
+              <text x="260" y="43" text-anchor="middle" class="title">ArchiveMessageHandler</text>
+              <text x="16" y="82" class="member static">- ARCHIVE_CHANNEL_NAME: String {final}</text>
+              <text x="16" y="106" class="member">- guildId: long {final}</text>
+              <line class="divider" y1="124" x2="520" y2="124"/>
+              <text x="16" y="150" class="member">+ ArchiveMessageHandler(guildId: long)</text>
+              <text x="16" y="175" class="member">+ handle(event: MessageReceivedEvent): void</text>
+              <text x="16" y="200" class="member">- isArchiveMessage(event): boolean</text>
+              <text x="16" y="225" class="member">- logReceivedMessage(event): void</text>
+            </g>
+
+            <g transform="translate(880 650)">
+              <rect class="box" width="470" height="280"/>
+              <rect class="head-commands" width="470" height="55"/>
+              <line class="divider" y1="55" x2="470" y2="55"/>
+              <text x="235" y="20" text-anchor="middle" class="stereo">slash commands e ajuda</text>
+              <text x="235" y="43" text-anchor="middle" class="title">CommandHandler</text>
+              <text x="16" y="80" class="member static">- ADMIN_ROLE_NAME: String {final}</text>
+              <text x="16" y="102" class="member static">- ADMIN_COMMANDS: Set&lt;String&gt; {final}</text>
+              <text x="16" y="124" class="member static">- HELP_COMMANDS: Set&lt;String&gt; {final}</text>
+              <text x="16" y="146" class="member">- guildId: long {final}</text>
+              <line class="divider" y1="161" x2="470" y2="161"/>
+              <text x="16" y="184" class="member">+ CommandHandler(guildId: long)</text>
+              <text x="16" y="206" class="member">+ handle(event: SlashCommandInteractionEvent): void</text>
+              <text x="16" y="228" class="member">- hasAdminRole(event): boolean</text>
+              <text x="16" y="250" class="member">- buildHelp(includeAdmin: boolean): String</text>
+            </g>
+          </svg>
+        </div>
+        <div class="diagram-legend">
+          <span><svg viewBox="0 0 52 18" aria-hidden="true"><path d="M0 9H37M37 2L50 9L37 16Z" fill="none" stroke="#326d91" stroke-width="1.7"/></svg>Herança: aponta para a superclasse</span>
+          <span><svg viewBox="0 0 52 18" aria-hidden="true"><path d="M0 9H50" stroke="#6c7d87" stroke-width="1.7" stroke-dasharray="6 4"/><path d="M42 3L50 9L42 15" fill="none" stroke="#6c7d87" stroke-width="1.7"/></svg>Dependência: usa a classe indicada</span>
+          <span><svg viewBox="0 0 52 18" aria-hidden="true"><path d="M0 9L10 2L20 9L10 16Z" fill="#18745d"/><path d="M20 9H52" stroke="#18745d" stroke-width="1.7"/></svg>Composição: losango junto do proprietário</span>
+        </div>
+        <div class="rel"><table>
+          <thead><tr><th scope="col">Origem → destino</th><th scope="col">Relação</th><th scope="col">Evidência no código</th></tr></thead>
+          <tbody>
+            <tr><td>LeaderBot → ListenerAdapter</td><td>Herança</td><td><code>extends ListenerAdapter</code> e callbacks com <code>@Override</code>.</td></tr>
+            <tr><td>LeaderBot → ArchiveMessageHandler</td><td>Composição · 1 para 1</td><td>Instância criada no construtor e guardada no campo <code>archiveMessageHandler</code>.</td></tr>
+            <tr><td>LeaderBot → CommandHandler</td><td>Composição · 1 para 1</td><td>Instância criada no construtor e guardada no campo <code>commandHandler</code>.</td></tr>
+            <tr><td>LeaderBot → CommandDefinitions</td><td>Dependência</td><td><code>registerCommands()</code> chama <code>createAll()</code> para publicar as definições no servidor.</td></tr>
+            <tr><td>CommandHandler → CommandDefinitions</td><td>Dependência</td><td><code>buildHelp()</code> chama <code>createAll()</code> para construir os textos de ajuda.</td></tr>
+          </tbody>
+        </table></div>
+      </div>
+    </section>
+  </main>
+
+  <section class="foot">
+    <h2>Como ler</h2>
+    <p><b>Herança:</b> <code>LeaderBot</code> especializa <code>ListenerAdapter</code>. <b>Composição:</b> cada instância do bot cria e mantém os seus dois handlers. <b>Dependência:</b> uma classe chama métodos de outra sem a guardar como atributo.</p>
+    <p>Os handlers são classes comuns chamadas por <code>LeaderBot</code>. As classes da JDA, os eventos e o servidor Discord são infraestrutura externa. Este diagrama documenta o código atual de <code>tpf-lider/src/main/java/tpf</code>.</p>
+  </section>
+
+  <script>
+    // Muda a vista e permite abrir diretamente um separador pelo fragmento do URL.
+    const tabs = [...document.querySelectorAll('[data-view]')];
+    const views = [...document.querySelectorAll('.view')];
+    function showView(id, updateHash = true) {
+      if (!views.some(view => view.id === id)) id = 'geral';
+      tabs.forEach(tab => {
+        const selected = tab.dataset.view === id;
+        tab.setAttribute('aria-selected', String(selected));
+        tab.tabIndex = selected ? 0 : -1;
+      });
+      views.forEach(view => view.classList.toggle('active', view.id === id));
+      if (updateHash) history.replaceState(null, '', '#' + id);
+    }
+    tabs.forEach((tab, index) => {
+      tab.addEventListener('click', () => showView(tab.dataset.view));
+      tab.addEventListener('keydown', event => {
+        let nextIndex;
+        if (event.key === 'ArrowRight') nextIndex = (index + 1) % tabs.length;
+        if (event.key === 'ArrowLeft') nextIndex = (index - 1 + tabs.length) % tabs.length;
+        if (event.key === 'Home') nextIndex = 0;
+        if (event.key === 'End') nextIndex = tabs.length - 1;
+        if (nextIndex === undefined) return;
+        event.preventDefault();
+        tabs[nextIndex].focus();
+        showView(tabs[nextIndex].dataset.view);
+      });
+    });
+    window.addEventListener('hashchange', () => showView(location.hash.slice(1), false));
+    showView(location.hash.slice(1), false);
+    document.getElementById('print').addEventListener('click', () => window.print());
+
+    // Altera apenas a área visível do SVG; o desenho original mantém-se intacto.
+    const svg = document.getElementById('class-diagram');
+    const stage = document.getElementById('diagram-stage');
+    const zoomValue = document.getElementById('zoom-value');
+    const initialView = { x: 0, y: 0, width: 1440, height: 980 };
+    let currentView = { ...initialView };
+    let drag = null;
+    let viewBeforePrint = null;
+
+    function renderView() {
+      const { x, y, width, height } = currentView;
+      svg.setAttribute('viewBox', `${x} ${y} ${width} ${height}`);
+      zoomValue.textContent = `${Math.round(initialView.width / width * 100)}%`;
+    }
+    function resetView() {
+      currentView = { ...initialView };
+      renderView();
+    }
+    // Converte coordenadas do ecrã, incluindo as margens de ajuste do SVG.
+    function diagramPoint(clientX, clientY) {
+      const matrix = svg.getScreenCTM();
+      if (!matrix) return null;
+      return new DOMPoint(clientX, clientY).matrixTransform(matrix.inverse());
+    }
+    function zoomAt(factor, clientX, clientY) {
+      const point = diagramPoint(clientX, clientY);
+      if (!point) return;
+      const width = Math.min(initialView.width * 2, Math.max(initialView.width / 3.5, currentView.width * factor));
+      const ratio = width / currentView.width;
+      currentView = {
+        x: point.x - (point.x - currentView.x) * ratio,
+        y: point.y - (point.y - currentView.y) * ratio,
+        width,
+        height: currentView.height * ratio
+      };
+      renderView();
+    }
+    function zoomCenter(factor) {
+      const bounds = svg.getBoundingClientRect();
+      zoomAt(factor, bounds.left + bounds.width / 2, bounds.top + bounds.height / 2);
+    }
+    document.getElementById('zoom-in').addEventListener('click', () => zoomCenter(.8));
+    document.getElementById('zoom-out').addEventListener('click', () => zoomCenter(1.25));
+    document.getElementById('zoom-reset').addEventListener('click', resetView);
+    stage.addEventListener('wheel', event => {
+      event.preventDefault();
+      zoomAt(event.deltaY < 0 ? .86 : 1.16, event.clientX, event.clientY);
+    }, { passive: false });
+
+    // Guarda a transformação inicial para arrastar sem saltos mesmo com zoom.
+    stage.addEventListener('pointerdown', event => {
+      if (event.button !== 0 || drag) return;
+      const matrix = svg.getScreenCTM();
+      if (!matrix) return;
+      drag = { pointerId: event.pointerId, x: event.clientX, y: event.clientY, view: { ...currentView }, scale: matrix.a };
+      stage.setPointerCapture(event.pointerId);
+      stage.classList.add('dragging');
+      stage.focus({ preventScroll: true });
+    });
+    stage.addEventListener('pointermove', event => {
+      if (!drag || event.pointerId !== drag.pointerId) return;
+      currentView.x = drag.view.x - (event.clientX - drag.x) / drag.scale;
+      currentView.y = drag.view.y - (event.clientY - drag.y) / drag.scale;
+      renderView();
+    });
+    function stopDrag() {
+      drag = null;
+      stage.classList.remove('dragging');
+    }
+    stage.addEventListener('pointerup', stopDrag);
+    stage.addEventListener('pointercancel', stopDrag);
+    stage.addEventListener('lostpointercapture', stopDrag);
+    stage.addEventListener('dblclick', resetView);
+    stage.addEventListener('keydown', event => {
+      const movement = currentView.width * .04;
+      if (event.key === '+' || event.key === '=') zoomCenter(.8);
+      else if (event.key === '-') zoomCenter(1.25);
+      else if (event.key === '0') resetView();
+      else if (event.key === 'ArrowLeft') currentView.x -= movement;
+      else if (event.key === 'ArrowRight') currentView.x += movement;
+      else if (event.key === 'ArrowUp') currentView.y -= movement;
+      else if (event.key === 'ArrowDown') currentView.y += movement;
+      else return;
+      event.preventDefault();
+      renderView();
+    });
+
+    // A impressão inclui todas as vistas e o diagrama completo, independentemente do zoom.
+    window.addEventListener('beforeprint', () => {
+      viewBeforePrint = { ...currentView };
+      resetView();
+    });
+    window.addEventListener('afterprint', () => {
+      if (viewBeforePrint) currentView = viewBeforePrint;
+      viewBeforePrint = null;
+      renderView();
+    });
+    renderView();
+  </script>
+</body>
+</html>
